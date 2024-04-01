@@ -1,4 +1,4 @@
-import { getRandomInt, getRandomArrayElement } from './util.js';
+import { getRandomInt, getRandomArrayElement } from '../utils/common.js';
 import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 dayjs.extend(dayjsRandom);

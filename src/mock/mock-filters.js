@@ -1,5 +1,3 @@
-import { getRandomInt, getRandomArrayElement } from './util.js';
-
 const setFiltersCount = (filmCards) => {
   let filters = {
     watchList: 0,

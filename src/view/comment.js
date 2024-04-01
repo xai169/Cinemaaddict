@@ -1,4 +1,4 @@
-import { createElement } from '../mock/util.js';
+import AbstractView from './abstract.js';
 
 const createCommentsTemplate = (comment) => {
   return `<li class="film-details__comment">
@@ -16,25 +16,13 @@ const createCommentsTemplate = (comment) => {
 </li>`;
 }
 
-export default class Comments {
+export default class Comments extends AbstractView {
   constructor(comment) {
-    this._element = null;
+    super();
     this._comment = comment;
   }
 
   getTemplate() {
     return createCommentsTemplate(this._comment);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

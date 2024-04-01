@@ -1,4 +1,4 @@
-import { createElement } from '../mock/util.js';
+import AbstractView from './abstract.js';
 import { getShortDescription, setFilmCardControl } from '../mock/mock-film-card.js';
 
 const createPopupTemplate = (filmCard) => {
@@ -113,25 +113,24 @@ const createPopupTemplate = (filmCard) => {
 </section>`;
 }
 
-export default class Popup {
+export default class Popup extends AbstractView {
   constructor(filmCard) {
-    this._element = null;
+    super();
     this._filmCard = filmCard;
+    this._popupCloseClickHandler = this._popupCloseClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPopupTemplate(this._filmCard);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupCloseClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupCloseClick();
   }
 
-  removeElement() {
-    this._element = null;
-  }
+  setPopupCloseClickHandler(callback) {
+    this._callback.popupCloseClick = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupCloseClickHandler);
+  };
 }

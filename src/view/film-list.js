@@ -1,4 +1,4 @@
-import { createElement } from '../mock/util.js';
+import AbstractView from "./abstract";
 
 const createFilmListTemplate = () => {
   return `<section class="films-list">
@@ -10,24 +10,9 @@ const createFilmListTemplate = () => {
     </section>`;
 }
 
-export default class FilmList {
-  constructor() {
-    this._element = null;
-  }
+export default class FilmList extends AbstractView {
 
   getTemplate() {
-    return createFilmListTemplate()
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createFilmListTemplate();
   }
 }

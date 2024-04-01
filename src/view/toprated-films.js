@@ -1,4 +1,4 @@
-import { createElement } from '../mock/util.js';
+import AbstractView from "./abstract";
 
 const createTopRatedFilmsTemplate = () => {
   return `<section class="films-list films-list--extra" id="top_rated">
@@ -9,24 +9,9 @@ const createTopRatedFilmsTemplate = () => {
     </section>`;
 }
 
-export default class MostCommentedFilms {
-  constructor() {
-    this._element = null;
-  }
+export default class MostCommentedFilms extends AbstractView {
 
   getTemplate() {
     return createTopRatedFilmsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

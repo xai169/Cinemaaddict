@@ -1,4 +1,4 @@
-import { createElement } from '../mock/util.js';
+import AbstractView from './abstract.js';
 import { getShortDescription, setFilmCardControl } from '../mock/mock-film-card.js';
 
 const createFilmCardTemplate = (filmCard) => {
@@ -21,25 +21,26 @@ const createFilmCardTemplate = (filmCard) => {
         </article>`;
 }
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(filmCard) {
-    this._element = null;
+    super();
     this._filmCard = filmCard;
+    this._popupShowClickHandler = this._popupShowClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupShowClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupShowClick();
   }
 
-  removeElement() {
-    this._element = null;
-  }
+  setPopupShowClickHandler(callback) {
+    this._callback.popupShowClick = callback;
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._popupShowClickHandler);
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._popupShowClickHandler);
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._popupShowClickHandler);
+  };
 }

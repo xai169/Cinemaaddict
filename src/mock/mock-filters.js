@@ -6,10 +6,6 @@ const setFiltersCount = (filmCards) => {
     rank: 0,
   };
 
-  if (filmCards.length === 0) {
-    return filters;
-  }
-
   filmCards.forEach((filmCard) => {
     if (filmCard.filter.isFavorite) {
       filters.favorite += 1;

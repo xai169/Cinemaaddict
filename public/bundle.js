@@ -199,10 +199,6 @@ const setFiltersCount = (filmCards) => {
     rank: 0,
   };
 
-  if (filmCards.length === 0) {
-    return filters;
-  }
-
   filmCards.forEach((filmCard) => {
     if (filmCard.filter.isFavorite) {
       filters.favorite += 1;
@@ -232,6 +228,171 @@ const setFiltersCount = (filmCards) => {
 };
 
 
+
+/***/ }),
+
+/***/ "./src/presenter/MovieList.js":
+/*!************************************!*\
+  !*** ./src/presenter/MovieList.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ MovieList)
+/* harmony export */ });
+/* harmony import */ var _view_film_card_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../view/film-card.js */ "./src/view/film-card.js");
+/* harmony import */ var _view_film_section_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/film-section.js */ "./src/view/film-section.js");
+/* harmony import */ var _view_film_list_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../view/film-list.js */ "./src/view/film-list.js");
+/* harmony import */ var _view_popup_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../view/popup.js */ "./src/view/popup.js");
+/* harmony import */ var _view_sort_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../view/sort.js */ "./src/view/sort.js");
+/* harmony import */ var _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../view/showmore-button.js */ "./src/view/showmore-button.js");
+/* harmony import */ var _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../view/toprated-films.js */ "./src/view/toprated-films.js");
+/* harmony import */ var _view_mostcommented_films_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../view/mostcommented-films.js */ "./src/view/mostcommented-films.js");
+/* harmony import */ var _view_comment_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../view/comment.js */ "./src/view/comment.js");
+/* harmony import */ var _view_empty_film_list_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../view/empty-film-list.js */ "./src/view/empty-film-list.js");
+/* harmony import */ var _utils_common_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../utils/common.js */ "./src/utils/common.js");
+/* harmony import */ var _utils_film_cards_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../utils/film-cards.js */ "./src/utils/film-cards.js");
+/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../utils/render.js */ "./src/utils/render.js");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class MovieList {
+  constructor(movieListContainer) {
+    this._movieListContainer = movieListContainer;
+
+    this._emptyListComponent = new _view_empty_film_list_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
+    this._sortComponent = new _view_sort_js__WEBPACK_IMPORTED_MODULE_4__["default"]();
+    this._filmSectionComponent = new _view_film_section_js__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this._filmListComponent = new _view_film_list_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this._mostCommentedFilmsComponent = new _view_mostcommented_films_js__WEBPACK_IMPORTED_MODULE_7__["default"]();
+    this._topRatedFilmsComponent = new _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_6__["default"]();
+  }
+
+  init(filmCards) {
+    this._filmCards = filmCards.slice();
+  }
+
+  _renderEmptyList() {
+    if (filmCards.length === 0) {
+      (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(siteMainElement, this._emptyListComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+      return;
+    }
+  }
+
+  _renderSort() {
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(movieListContainer, this._sortComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+  }
+
+  _renderShowMoreButton() {
+    const showMoreButtonComponent = new _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmListComponent, showMoreButtonComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+  }
+
+  _renderMostCommentedFilms() {
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmSectionComponent, mostCommentedFilmsComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+    const mostCommentedList = this._mostCommentedFilmsComponent.getElement().querySelector('.films-list__container');
+    const mostCommentedFilms = filmCards.slice().sort(_utils_film_cards_js__WEBPACK_IMPORTED_MODULE_11__.compareCommentsNumber);
+    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+      renderFilmCard(mostCommentedList, mostCommentedFilms[i]);
+    }
+  }
+
+  _renderTopRatedFilms() {
+    const topRatedFilmsComponent = new _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_6__["default"]();
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmSectionComponent, topRatedFilmsComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+    const topRatedList = topRatedFilmsComponent.getElement().querySelector('.films-list__container');
+    const topRatedFilms = filmCards.slice().sort(_utils_film_cards_js__WEBPACK_IMPORTED_MODULE_11__.compareFilmRaiting);
+    for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
+      renderFilmCard(topRatedList, topRatedFilms[i]);
+    }
+  }
+
+  _renderMovieCard(filmCardListElement, filmCard) {
+    const filmComponent = new _view_film_card_js__WEBPACK_IMPORTED_MODULE_0__["default"](filmCard);
+    const filmPopupComponent = new _view_popup_js__WEBPACK_IMPORTED_MODULE_3__["default"](filmCard);
+
+    const onEscKeyDown = (evt) => {
+      if ((0,_utils_common_js__WEBPACK_IMPORTED_MODULE_10__.checkEsc)(evt)) {
+        closePopup();
+      }
+    };
+
+    const showPopup = () => {
+      (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.append)(siteBody, filmPopupComponent);
+      const commentsList = filmPopupComponent.getElement(filmCard).querySelector('.film-details__comments-list');
+      for (let i = 0; i < filmCard.comments.length; i++) {
+        (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(commentsList, new _view_comment_js__WEBPACK_IMPORTED_MODULE_8__["default"](filmCard.comments[i]), _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+      }
+
+      siteBody.classList.add('hide-overflow');
+      document.addEventListener('keydown', onEscKeyDown);
+    };
+
+    const closePopup = () => {
+      (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.remove)(filmPopupComponent);
+      siteBody.classList.remove('hide-overflow');
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+
+    filmComponent.setPopupShowClickHandler(() => showPopup());
+    filmPopupComponent.setPopupCloseClickHandler(() => closePopup());
+
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmCardListElement, filmComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND)
+  };
+
+  _renderMovieList() {
+    _renderSort()
+
+    const filmSectionComponent = new _view_film_section_js__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(movieListContainer, filmSectionComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+    const filmListComponent = new _view_film_list_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmSectionComponent, filmListComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+
+    //Отрисовка карточек в списке
+    const filmContainer = filmListComponent.getElement().querySelector('.films-list__container');
+    for (let i = 0; i < FILMS_START_COUNT; i++) {
+      renderFilmCard(filmContainer, filmCards[i]);
+    };
+
+    //Отрисовка секций Top Rated и Most Commented
+    _renderTopRatedFilms();
+    _renderMostCommentedFilms();
+
+    if (filmCards.length > FILM_COUNT_PER_STEP) {
+      const showMoreButtonComponent = new _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
+      (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.render)(filmListComponent, showMoreButtonComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_12__.RenderPosition.BEFOREEND);
+
+      let renderedFilmsCount = FILM_COUNT_PER_STEP;
+      showMoreButtonComponent.setClickHandler(() => {
+
+        filmCards
+          .slice(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP)
+          .forEach((filmCard) => {
+            renderFilmCard(filmContainer, filmCard);
+          });
+
+        renderedFilmsCount += FILM_COUNT_PER_STEP;
+
+        if (renderedFilmsCount >= filmCards.length && renderedFilmsCount === filmCards.length) {
+          (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_12__.remove)(showMoreButtonComponent);
+        }
+      });
+    };
+  }
+}
 
 /***/ }),
 
@@ -314,9 +475,14 @@ const compareFilmRaiting = (filmCardA, filmCardB) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RenderPosition: () => (/* binding */ RenderPosition),
+/* harmony export */   append: () => (/* binding */ append),
 /* harmony export */   createElement: () => (/* binding */ createElement),
+/* harmony export */   remove: () => (/* binding */ remove),
 /* harmony export */   render: () => (/* binding */ render)
 /* harmony export */ });
+/* harmony import */ var _view_abstract__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../view/abstract */ "./src/view/abstract.js");
+
+
 const RenderPosition = {
   AFTERBEGIN: 'afterbegin',
   BEFOREEND: 'beforeend',
@@ -324,6 +490,14 @@ const RenderPosition = {
 
 //Функция отрисовки разметки
 const render = (container, element, place) => {
+  if (container instanceof _view_abstract__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    container = container.getElement();
+  }
+
+  if (element instanceof _view_abstract__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    element = element.getElement();
+  }
+
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -340,6 +514,28 @@ const createElement = (template) => {
   newElement.innerHTML = template;
 
   return newElement.firstChild;
+};
+
+const append = (element, child) => {
+
+  if (child instanceof _view_abstract__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    child = child.getElement();
+  }
+
+  if (element instanceof _view_abstract__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    element = element.getElement();
+  }
+
+  element.appendChild(child);
+};
+
+const remove = (component) => {
+  if (!(component instanceof _view_abstract__WEBPACK_IMPORTED_MODULE_0__["default"])) {
+    throw new Error('Can remove only components');
+  }
+
+  component.getElement().remove();
+  component.removeElement();
 };
 
 
@@ -896,6 +1092,37 @@ class ShowMoreButton extends _abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"
 
 /***/ }),
 
+/***/ "./src/view/sort.js":
+/*!**************************!*\
+  !*** ./src/view/sort.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Sort)
+/* harmony export */ });
+/* harmony import */ var _abstract__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abstract */ "./src/view/abstract.js");
+
+
+const createSortTemplate = () => {
+  return `<ul class="sort">
+  <li><a href="#" class="sort__button">Sort by default</a></li>
+  <li><a href="#" class="sort__button">Sort by date</a></li>
+  <li><a href="#" class="sort__button sort__button--active">Sort by rating</a></li>
+</ul>`;
+}
+
+class Sort extends _abstract__WEBPACK_IMPORTED_MODULE_0__["default"] {
+
+  getTemplate() {
+    return createSortTemplate();
+  }
+}
+
+/***/ }),
+
 /***/ "./src/view/toprated-films.js":
 /*!************************************!*\
   !*** ./src/view/toprated-films.js ***!
@@ -943,12 +1170,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const createUserRankTemplate = (filters) => {
-  if (filters.rank !== '') {
-    return `<section class="header__profile profile">
+  if (filters.rank === '') {
+    return `<div></div>`;
+  }
+  return `<section class="header__profile profile">
   <p class="profile__rating">${filters.rank}</p>
   <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
 </section>`
-  }
 };
 
 class UserRank extends _abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
@@ -1045,18 +1273,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _view_film_section_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/film-section.js */ "./src/view/film-section.js");
 /* harmony import */ var _view_film_list_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/film-list.js */ "./src/view/film-list.js");
 /* harmony import */ var _view_popup_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/popup.js */ "./src/view/popup.js");
-/* harmony import */ var _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/showmore-button.js */ "./src/view/showmore-button.js");
-/* harmony import */ var _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/toprated-films.js */ "./src/view/toprated-films.js");
-/* harmony import */ var _view_mostcommented_films_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/mostcommented-films.js */ "./src/view/mostcommented-films.js");
-/* harmony import */ var _view_user_rank_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./view/user-rank.js */ "./src/view/user-rank.js");
-/* harmony import */ var _view_films_count_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./view/films-count.js */ "./src/view/films-count.js");
-/* harmony import */ var _mock_mock_film_card_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./mock/mock-film-card.js */ "./src/mock/mock-film-card.js");
-/* harmony import */ var _mock_mock_filters_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mock/mock-filters.js */ "./src/mock/mock-filters.js");
-/* harmony import */ var _view_comment_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./view/comment.js */ "./src/view/comment.js");
-/* harmony import */ var _view_empty_film_list_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./view/empty-film-list.js */ "./src/view/empty-film-list.js");
-/* harmony import */ var _utils_common_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./utils/common.js */ "./src/utils/common.js");
-/* harmony import */ var _utils_film_cards_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./utils/film-cards.js */ "./src/utils/film-cards.js");
-/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utils/render.js */ "./src/utils/render.js");
+/* harmony import */ var _view_sort_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/sort.js */ "./src/view/sort.js");
+/* harmony import */ var _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/showmore-button.js */ "./src/view/showmore-button.js");
+/* harmony import */ var _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/toprated-films.js */ "./src/view/toprated-films.js");
+/* harmony import */ var _view_mostcommented_films_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./view/mostcommented-films.js */ "./src/view/mostcommented-films.js");
+/* harmony import */ var _view_user_rank_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./view/user-rank.js */ "./src/view/user-rank.js");
+/* harmony import */ var _view_films_count_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./view/films-count.js */ "./src/view/films-count.js");
+/* harmony import */ var _mock_mock_film_card_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mock/mock-film-card.js */ "./src/mock/mock-film-card.js");
+/* harmony import */ var _mock_mock_filters_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./mock/mock-filters.js */ "./src/mock/mock-filters.js");
+/* harmony import */ var _view_comment_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./view/comment.js */ "./src/view/comment.js");
+/* harmony import */ var _view_empty_film_list_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./view/empty-film-list.js */ "./src/view/empty-film-list.js");
+/* harmony import */ var _utils_common_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./utils/common.js */ "./src/utils/common.js");
+/* harmony import */ var _utils_film_cards_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./utils/film-cards.js */ "./src/utils/film-cards.js");
+/* harmony import */ var _utils_render_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./utils/render.js */ "./src/utils/render.js");
+/* harmony import */ var _presenter_MovieList_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./presenter/MovieList.js */ "./src/presenter/MovieList.js");
+
+
 
 
 
@@ -1086,101 +1318,17 @@ const siteMainElement = document.querySelector('.main');
 const filmFooterStatistic = document.querySelector('.footer__statistics');
 
 //Генерация данных
-const filmCards = new Array(FILM_CARDS_COUNT).fill().map(_mock_mock_film_card_js__WEBPACK_IMPORTED_MODULE_10__.generateFilmCard);
-const filters = (0,_mock_mock_filters_js__WEBPACK_IMPORTED_MODULE_11__.setFiltersCount)(filmCards);
+const filmCards = new Array(FILM_CARDS_COUNT).fill().map(_mock_mock_film_card_js__WEBPACK_IMPORTED_MODULE_11__.generateFilmCard);
+const filters = (0,_mock_mock_filters_js__WEBPACK_IMPORTED_MODULE_12__.setFiltersCount)(filmCards);
 
-//Функция отрисовки карточки и попапа
-const renderFilmCard = (filmCardListElement, filmCard) => {
-  const filmComponent = new _view_film_card_js__WEBPACK_IMPORTED_MODULE_1__["default"](filmCard);
-  const filmPopupComponent = new _view_popup_js__WEBPACK_IMPORTED_MODULE_4__["default"](filmCard);
 
-  const onEscKeyDown = (evt) => {
-    if ((0,_utils_common_js__WEBPACK_IMPORTED_MODULE_14__.checkEsc)(evt)) {
-      closePopup();
-    }
-  };
 
-  const showPopup = () => {
-    siteBody.appendChild(filmPopupComponent.getElement(filmCard));
-    const commentsList = filmPopupComponent.getElement(filmCard).querySelector('.film-details__comments-list');
-    for (let i = 0; i < filmCard.comments.length; i++) {
-      (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(commentsList, new _view_comment_js__WEBPACK_IMPORTED_MODULE_12__["default"](filmCard.comments[i]).getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-    }
+(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_17__.render)(siteHeaderElement, new _view_user_rank_js__WEBPACK_IMPORTED_MODULE_9__["default"](filters), _utils_render_js__WEBPACK_IMPORTED_MODULE_17__.RenderPosition.BEFOREEND);
+(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_17__.render)(siteMainElement, new _view_menu_js__WEBPACK_IMPORTED_MODULE_0__["default"](filters), _utils_render_js__WEBPACK_IMPORTED_MODULE_17__.RenderPosition.BEFOREEND);
+(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_17__.render)(filmFooterStatistic, new _view_films_count_js__WEBPACK_IMPORTED_MODULE_10__["default"](filmCards), _utils_render_js__WEBPACK_IMPORTED_MODULE_17__.RenderPosition.BEFOREEND);
 
-    siteBody.classList.add('hide-overflow');
-    document.addEventListener('keydown', onEscKeyDown);
-  };
 
-  const closePopup = () => {
-    siteBody.removeChild(filmPopupComponent.getElement(filmCard));
-    siteBody.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', onEscKeyDown);
-  }
-
-  filmComponent.setPopupShowClickHandler(() => showPopup());
-  filmPopupComponent.setPopupCloseClickHandler(() => closePopup());
-
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmCardListElement, filmComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND)
-};
-
-(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(siteMainElement, new _view_menu_js__WEBPACK_IMPORTED_MODULE_0__["default"](filters).getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-(0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmFooterStatistic, new _view_films_count_js__WEBPACK_IMPORTED_MODULE_9__["default"](filmCards).getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-
-//Проверка наличия фильмов
-if (filmCards.length === 0) {
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(siteMainElement, new _view_empty_film_list_js__WEBPACK_IMPORTED_MODULE_13__["default"]().getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-} else {
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(siteHeaderElement, new _view_user_rank_js__WEBPACK_IMPORTED_MODULE_8__["default"](filters).getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-  const filmSectionComponent = new _view_film_section_js__WEBPACK_IMPORTED_MODULE_2__["default"]();
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(siteMainElement, filmSectionComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-  const filmListComponent = new _view_film_list_js__WEBPACK_IMPORTED_MODULE_3__["default"]();
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmSectionComponent.getElement(), filmListComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-
-  //Отрисовка карточек в списке
-  const filmContainer = filmListComponent.getElement().querySelector('.films-list__container');
-  for (let i = 0; i < FILMS_START_COUNT; i++) {
-    renderFilmCard(filmContainer, filmCards[i]);
-  };
-
-  //Отрисовка секций Top Rated и Most Commented
-  const mostCommentedFilmsComponent = new _view_mostcommented_films_js__WEBPACK_IMPORTED_MODULE_7__["default"]();
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmSectionComponent.getElement(), mostCommentedFilmsComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-  const mostCommentedList = mostCommentedFilmsComponent.getElement().querySelector('.films-list__container');
-  const mostCommentedFilms = filmCards.slice().sort(_utils_film_cards_js__WEBPACK_IMPORTED_MODULE_15__.compareCommentsNumber);
-  for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    renderFilmCard(mostCommentedList, mostCommentedFilms[i]);
-  }
-  const TopRatedFilmsComponent = new _view_toprated_films_js__WEBPACK_IMPORTED_MODULE_6__["default"]();
-  (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmSectionComponent.getElement(), TopRatedFilmsComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-  const topRatedList = TopRatedFilmsComponent.getElement().querySelector('.films-list__container');
-  const topRatedFilms = filmCards.slice().sort(_utils_film_cards_js__WEBPACK_IMPORTED_MODULE_15__.compareFilmRaiting);
-  for (let i = 0; i < EXTRA_FILMS_COUNT; i++) {
-    renderFilmCard(topRatedList, topRatedFilms[i]);
-  }
-
-  //Логика работы SHOW MORE BUTTON
-  if (filmCards.length > FILM_COUNT_PER_STEP) {
-    const showMoreButtonComponent = new _view_showmore_button_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
-    (0,_utils_render_js__WEBPACK_IMPORTED_MODULE_16__.render)(filmListComponent.getElement(), showMoreButtonComponent.getElement(), _utils_render_js__WEBPACK_IMPORTED_MODULE_16__.RenderPosition.BEFOREEND);
-
-    let renderedFilmsCount = FILM_COUNT_PER_STEP;
-    showMoreButtonComponent.setClickHandler(() => {
-
-      filmCards
-        .slice(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP)
-        .forEach((filmCard) => {
-          renderFilmCard(filmContainer, filmCard);
-        });
-
-      renderedFilmsCount += FILM_COUNT_PER_STEP;
-
-      if (renderedFilmsCount >= filmCards.length && renderedFilmsCount === filmCards.length) {
-        showMoreButtonComponent.getElement().remove();
-        showMoreButtonComponent.removeElement();
-      }
-    });
-  };
-}
+renderMovieList(siteMainElement, filmCards);
 })();
 
 /******/ })()

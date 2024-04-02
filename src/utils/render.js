@@ -12,7 +12,7 @@ const render = (container, element, place) => {
   }
 
   if (element instanceof Abstract) {
-    element = child.getElement();
+    element = element.getElement();
   }
 
   switch (place) {

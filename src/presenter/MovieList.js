@@ -21,6 +21,7 @@ export default class MovieList {
   constructor(movieListContainer) {
     this._movieListContainer = movieListContainer;
 
+    this._renderedFilmsCount = FILMS_START_COUNT;
     this._emptyListComponent = new EmptyFilmListView();
     this._sortComponent = new SortView();
     this._filmSectionComponent = new FilmSectionView();
@@ -50,11 +51,11 @@ export default class MovieList {
   }
 
   _showMoreButtonHandler() {
-    let renderedFilmsCount = FILM_COUNT_PER_STEP;
-    this._renderMovieCards(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP);
-    renderedFilmsCount += FILM_COUNT_PER_STEP;
-    if (renderedFilmsCount >= this._filmCards.length) {
-      remove(showMoreButtonComponent);
+    this._renderMovieCards(this._renderedFilmsCount, this._renderedFilmsCount + FILM_COUNT_PER_STEP);
+    this._renderedFilmsCount += FILM_COUNT_PER_STEP;
+    console.log(this._renderedFilmsCount);
+    if (this._renderedFilmsCount >= this._filmCards.length) {
+      remove(this._showMoreButtonComponent);
     }
   }
 

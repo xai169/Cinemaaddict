@@ -82,7 +82,7 @@ const generateFilmCard = () => {
       isWatchList: Boolean(getRandomInt(0, 1)),
     },
     director: getRandomArrayElement(directors),
-    writers: generateFilmDescription(writers),
+    writers: generateFilmWorkers(writers),
     actors: generateFilmWorkers(actors),
     country: getRandomArrayElement(countries),
     ageRaiting: getRandomArrayElement(ageRaitings),

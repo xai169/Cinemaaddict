@@ -46,6 +46,19 @@ const append = (element, child) => {
   element.appendChild(child);
 };
 
+const removeChild = (element, child) => {
+
+  if (child instanceof Abstract) {
+    child = child.getElement();
+  }
+
+  if (element instanceof Abstract) {
+    element = element.getElement();
+  }
+
+  element.removeChild(child);
+};
+
 const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error('Can remove only components');
@@ -55,4 +68,4 @@ const remove = (component) => {
   component.removeElement();
 };
 
-export { createElement, render, RenderPosition, append, remove };
+export { createElement, render, RenderPosition, append, remove, removeChild };

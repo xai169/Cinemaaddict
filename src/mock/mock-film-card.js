@@ -2,6 +2,7 @@ import { getRandomInt, getRandom, getRandomArrayElement } from '../utils/common.
 import { generateComments } from './mock-comments.js';
 import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
+import { nanoid } from 'nanoid';
 dayjs.extend(dayjsRandom);
 
 //Данные для карточки
@@ -68,6 +69,7 @@ const generateFilmCard = () => {
   const duration = dayjs.between('1950-06-10T01:00:00', '1950-06-10T04:00:00');
 
   return {
+    id: nanoid(),
     poster: getRandomArrayElement(posters),
     title: getRandomArrayElement(titles),
     raiting: getRandom(0, 10).toFixed(1),

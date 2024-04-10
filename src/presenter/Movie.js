@@ -2,12 +2,13 @@ import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/popup.js";
 import CommentsView from "../view/comment.js";
 import { checkEsc } from '../utils/common.js';
-import { render, RenderPosition, append, removeChild } from '../utils/render.js';
+import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 
 export default class Movie {
-  constructor(changeData) {
+  constructor(movieCardListElement, changeData) {
     this._siteBody = document.querySelector('body');
     this._changeData = changeData;
+    this._movieCardListElement = movieCardListElement;
 
     this._filmComponent = null;
     this._filmPopupComponent = null;
@@ -17,12 +18,14 @@ export default class Movie {
     this._closePopup = this._closePopup.bind(this);
 
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
-    // this._handleFavoriteClick = this._handleFavoriteClick(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleWathedClick = this._handleWathedClick.bind(this);
   }
 
-  init(movieCardListElement, movieCard) {
+  init(movieCard) {
     this._movieCard = movieCard;
+
+    const oldFilmCard = this._filmComponent;
 
     this._filmComponent = new FilmCardView(movieCard);
     this._filmPopupComponent = new PopupView(movieCard);
@@ -31,11 +34,21 @@ export default class Movie {
     this._filmPopupComponent.setPopupCloseClickHandler(() => this._closePopup());
 
     this._filmComponent.setWatchListClickHandler(this._handleWatchListClick);
-    // this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchedClickHandler(this._handleWathedClick);
 
-    render(movieCardListElement, this._filmComponent, RenderPosition.BEFOREEND)
+    if (oldFilmCard === null) {
+      render(this._movieCardListElement, this._filmComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this._filmComponent, oldFilmCard);
+    remove(oldFilmCard);
   };
+
+  destroy() {
+    remove(this._filmComponent);
+  }
 
   _onEscKeyDown(evt) {
     if (checkEsc(evt)) {
@@ -65,23 +78,31 @@ export default class Movie {
         {},
         this._movieCard,
         {
-          isWatchList: !this._movieCard.isWatchList,
+          filter: {
+            isFavorite: this._movieCard.filter.isFavorite,
+            isWatched: this._movieCard.filter.isWatched,
+            isWatchList: !this._movieCard.filter.isWatchList,
+          }
         },
       ),
     );
   }
 
-  // _handleFavoriteClick() {
-  //   this._changeData(
-  //     Object.assign(
-  //       {},
-  //       this._movieCard,
-  //       {
-  //         isFavorite: !this._movieCard.isFavorite,
-  //       },
-  //     ),
-  //   );
-  // }
+  _handleFavoriteClick() {
+    this._changeData(
+      Object.assign(
+        {},
+        this._movieCard,
+        {
+          filter: {
+            isFavorite: !this._movieCard.filter.isFavorite,
+            isWatched: this._movieCard.filter.isWatched,
+            isWatchList: this._movieCard.filter.isWatchList,
+          }
+        },
+      ),
+    );
+  }
 
   _handleWathedClick() {
     this._changeData(
@@ -89,7 +110,11 @@ export default class Movie {
         {},
         this._movieCard,
         {
-          isWatched: !this._movieCard.isWatched,
+          filter: {
+            isFavorite: this._movieCard.filter.isFavorite,
+            isWatched: !this._movieCard.filter.isWatched,
+            isWatchList: this._movieCard.filter.isWatchList,
+          }
         },
       ),
     );

@@ -53,11 +53,15 @@ const setFilmCardControl = {
   basic(isActive) {
     if (isActive) {
       return `film-card__controls-item--active`;
+    } else {
+      return ``;
     }
   },
   popup(isActive) {
     if (isActive) {
       return `film-details__control-button--active`;
+    } else {
+      return ``;
     }
   }
 }

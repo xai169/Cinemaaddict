@@ -26,6 +26,7 @@ export default class Movie {
     this._movieCard = movieCard;
 
     const oldFilmCard = this._filmComponent;
+    const oldFilmPopupCard = this._filmPopupComponent;
 
     this._filmComponent = new FilmCardView(movieCard);
     this._filmPopupComponent = new PopupView(movieCard);
@@ -37,13 +38,19 @@ export default class Movie {
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchedClickHandler(this._handleWathedClick);
 
+    this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
+    this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
+    this._filmPopupComponent.setWatchedPopupClickHandler(this._handleWathedClick);
+
     if (oldFilmCard === null) {
       render(this._movieCardListElement, this._filmComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     replace(this._filmComponent, oldFilmCard);
+    replace(this._filmPopupComponent, oldFilmPopupCard);
     remove(oldFilmCard);
+    remove(oldFilmPopupCard);
   };
 
   destroy() {
@@ -64,6 +71,10 @@ export default class Movie {
     }
     this._siteBody.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
+
+    // this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
+    // this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
+    // this._filmPopupComponent.setWatchedPopupClickHandler(this._handleWathedClick);
   };
 
   _closePopup() {

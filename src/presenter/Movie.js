@@ -1,13 +1,15 @@
 import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/popup.js";
 import CommentsView from "../view/comment.js";
-import { checkEsc } from '../utils/common.js';
+import { checkEsc, Mode } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 
 export default class Movie {
-  constructor(movieCardListElement, changeData) {
+  constructor(movieCardListElement, changeData, changeMode) {
     this._siteBody = document.querySelector('body');
+
     this._changeData = changeData;
+    this._changeMode = changeMode;
     this._movieCardListElement = movieCardListElement;
 
     this._filmComponent = null;
@@ -31,6 +33,11 @@ export default class Movie {
     this._filmComponent = new FilmCardView(movieCard);
     this._filmPopupComponent = new PopupView(movieCard);
 
+    const commentsList = this._filmPopupComponent.getElement().querySelector('.film-details__comments-list');
+    for (let i = 0; i < movieCard.comments.length; i++) {
+      render(commentsList, new CommentsView(movieCard.comments[i]), RenderPosition.BEFOREEND);
+    }
+
     this._filmComponent.setPopupShowClickHandler(() => this._showPopup(movieCard));
     this._filmPopupComponent.setPopupCloseClickHandler(() => this._closePopup());
 
@@ -53,10 +60,6 @@ export default class Movie {
     remove(oldFilmPopupCard);
   };
 
-  destroy() {
-    remove(this._filmComponent);
-  }
-
   _onEscKeyDown(evt) {
     if (checkEsc(evt)) {
       this._closePopup();
@@ -65,12 +68,15 @@ export default class Movie {
 
   _showPopup(movieCard) {
     append(this._siteBody, this._filmPopupComponent);
-    const commentsList = this._filmPopupComponent.getElement().querySelector('.film-details__comments-list');
-    for (let i = 0; i < movieCard.comments.length; i++) {
-      render(commentsList, new CommentsView(movieCard.comments[i]), RenderPosition.BEFOREEND);
-    }
+    // const commentsList = this._filmPopupComponent.getElement().querySelector('.film-details__comments-list');
+    // for (let i = 0; i < movieCard.comments.length; i++) {
+    //   render(commentsList, new CommentsView(movieCard.comments[i]), RenderPosition.BEFOREEND);
+    // }
     this._siteBody.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
+
+    // this._changeMode();
+    this._mode = Mode.EDITING;
 
     // this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
     // this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
@@ -130,4 +136,14 @@ export default class Movie {
       ),
     );
   };
+
+  destroy() {
+    remove(this._filmComponent);
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closePopup();
+    }
+  }
 }

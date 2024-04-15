@@ -37,4 +37,9 @@ const updateItem = (items, update) => {
   ];
 };
 
-export { getRandomInt, getRandom, getRandomArrayElement, checkEsc, updateItem };
+const Mode = {
+  DEFAULT: `default`,
+  EDITING: `editing`
+};
+
+export { getRandomInt, getRandom, getRandomArrayElement, checkEsc, updateItem, Mode };

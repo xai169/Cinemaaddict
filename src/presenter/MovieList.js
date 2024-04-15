@@ -141,7 +141,7 @@ export default class MovieList {
       this._renderShowMoreButton();
     }
 
-    // this._renderTopRatedFilms();
-    // this._renderMostCommentedFilms();
+    this._renderTopRatedFilms();
+    this._renderMostCommentedFilms();
   };
 };

@@ -14,6 +14,7 @@ export default class Movie {
 
     this._filmComponent = null;
     this._filmPopupComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._showPopup = this._showPopup.bind(this);
@@ -34,9 +35,9 @@ export default class Movie {
     this._filmPopupComponent = new PopupView(movieCard);
 
     const commentsList = this._filmPopupComponent.getElement().querySelector('.film-details__comments-list');
-    for (let i = 0; i < movieCard.comments.length; i++) {
-      render(commentsList, new CommentsView(movieCard.comments[i]), RenderPosition.BEFOREEND);
-    }
+    movieCard.comments
+      .slice()
+      .forEach((comment) => render(commentsList, new CommentsView(comment), RenderPosition.BEFOREEND));
 
     this._filmComponent.setPopupShowClickHandler(() => this._showPopup(movieCard));
     this._filmPopupComponent.setPopupCloseClickHandler(() => this._closePopup());
@@ -68,25 +69,18 @@ export default class Movie {
 
   _showPopup(movieCard) {
     append(this._siteBody, this._filmPopupComponent);
-    // const commentsList = this._filmPopupComponent.getElement().querySelector('.film-details__comments-list');
-    // for (let i = 0; i < movieCard.comments.length; i++) {
-    //   render(commentsList, new CommentsView(movieCard.comments[i]), RenderPosition.BEFOREEND);
-    // }
     this._siteBody.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
 
-    // this._changeMode();
+    this._changeMode();
     this._mode = Mode.EDITING;
-
-    // this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
-    // this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
-    // this._filmPopupComponent.setWatchedPopupClickHandler(this._handleWathedClick);
   };
 
   _closePopup() {
     this._siteBody.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this._onEscKeyDown);
     removeChild(this._siteBody, this._filmPopupComponent);
+    this._mode = Mode.DEFAULT;
   };
 
   _handleWatchListClick() {

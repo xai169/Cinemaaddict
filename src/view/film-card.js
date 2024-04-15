@@ -37,7 +37,7 @@ export default class FilmCard extends AbstractView {
 
   _popupShowClickHandler(evt) {
     evt.preventDefault();
-    this._callback.popupShowClick();
+    this._callback.popupShowClick(this._filmCard);
   }
 
   setPopupShowClickHandler(callback) {

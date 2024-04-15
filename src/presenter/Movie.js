@@ -17,8 +17,8 @@ export default class Movie {
     this._mode = Mode.DEFAULT;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._showPopup = this._showPopup.bind(this);
     this._closePopup = this._closePopup.bind(this);
+    this._handlePopupShow = this._handlePopupShow.bind(this);
 
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
@@ -39,8 +39,8 @@ export default class Movie {
       .slice()
       .forEach((comment) => render(commentsList, new CommentsView(comment), RenderPosition.BEFOREEND));
 
-    this._filmComponent.setPopupShowClickHandler(() => this._showPopup(movieCard));
-    this._filmPopupComponent.setPopupCloseClickHandler(() => this._closePopup());
+    this._filmComponent.setPopupShowClickHandler(this._handlePopupShow);
+    this._filmPopupComponent.setPopupCloseClickHandler(this._closePopup);
 
     this._filmComponent.setWatchListClickHandler(this._handleWatchListClick);
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -56,7 +56,10 @@ export default class Movie {
     }
 
     replace(this._filmComponent, oldFilmCard);
-    replace(this._filmPopupComponent, oldFilmPopupCard);
+
+    if (this._mode === Mode.EDITING) {
+      replace(this._filmPopupComponent, oldFilmPopupCard);
+    }
     remove(oldFilmCard);
     remove(oldFilmPopupCard);
   };
@@ -67,7 +70,7 @@ export default class Movie {
     }
   };
 
-  _showPopup(movieCard) {
+  _showPopup() {
     append(this._siteBody, this._filmPopupComponent);
     this._siteBody.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
@@ -75,6 +78,10 @@ export default class Movie {
     this._changeMode();
     this._mode = Mode.EDITING;
   };
+
+  _handlePopupShow() {
+    this._showPopup();
+  }
 
   _closePopup() {
     this._siteBody.classList.remove('hide-overflow');

@@ -24,7 +24,10 @@ const createFilmCardTemplate = (filmCard) => {
 export default class FilmCard extends AbstractView {
   constructor(filmCard) {
     super();
+
     this._filmCard = filmCard;
+    this._currentItem = null;
+
     this._popupShowClickHandler = this._popupShowClickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -37,8 +40,21 @@ export default class FilmCard extends AbstractView {
 
   _popupShowClickHandler(evt) {
     evt.preventDefault();
-    this._callback.popupShowClick();
+    this._callback.popupShowClick(this._filmCard);
+
+    // this._currentItem = evt.target;
+
+    // if (this._currentItem.className !== `film-card__poster`
+    //   && this._currentItem.className !== `film-card__title`
+    //   && this._currentItem.className !== `film-card__comments`) {
+    //   return;
+    // }
+
+    // evt.preventDefault();
+
+    // this._handler.click(this._film);
   }
+
 
   setPopupShowClickHandler(callback) {
     this._callback.popupShowClick = callback;

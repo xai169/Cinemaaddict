@@ -8,4 +8,9 @@ const compareFilmRaiting = (filmCardA, filmCardB) => {
   return filmCardB.raiting - filmCardA.raiting;
 };
 
-export { compareCommentsNumber, compareFilmRaiting };
+//Функция сравнения даты у фильмов
+const compareFilmDate = (filmCardA, filmCardB) => {
+  return filmCardB.releaseDate.format('YYYY') - filmCardA.releaseDate.format('YYYY');
+};
+
+export { compareCommentsNumber, compareFilmRaiting, compareFilmDate };

@@ -20,7 +20,7 @@ const filters = setFiltersCount(filmCards);
 const movieListPresenter = new MovieListMaker(siteMainElement);
 
 render(siteHeaderElement, new UserRankView(filters), RenderPosition.BEFOREEND);
-render(siteMainElement, new MenuView(filters), RenderPosition.BEFOREEND);
+render(siteMainElement, new MenuView(filters), RenderPosition.AFTERBEGIN);
 render(filmFooterStatistic, new FilmsCountView(filmCards), RenderPosition.BEFOREEND);
 
 

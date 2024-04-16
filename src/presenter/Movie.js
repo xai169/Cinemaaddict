@@ -1,8 +1,13 @@
 import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/popup.js";
 import CommentsView from "../view/comment.js";
-import { checkEsc, Mode } from '../utils/common.js';
+import { checkEsc } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
+
+const Mode = {
+  DEFAULT: `default`,
+  EDITING: `editing`
+};
 
 export default class Movie {
   constructor(movieCardListElement, changeData, changeMode) {
@@ -81,10 +86,6 @@ export default class Movie {
 
     this._changeMode();
     this._mode = Mode.EDITING;
-
-    // this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
-    // this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
-    // this._filmPopupComponent.setWatchedPopupClickHandler(this._handleWathedClick);
   };
 
   _handlePopupShow() {
@@ -149,6 +150,7 @@ export default class Movie {
 
   destroy() {
     remove(this._filmComponent);
+    remove(this._filmPopupComponent);
   }
 
   resetView() {

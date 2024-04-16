@@ -7,9 +7,10 @@ import TopRatedFilmsView from "../view/toprated-films.js";
 import MostCommentedFilmsView from "../view/mostcommented-films.js";
 import EmptyFilmListView from "../view/empty-film-list.js";
 import { updateItem } from '../utils/common.js';
-import { compareCommentsNumber, compareFilmRaiting } from '../utils/film-cards.js';
+import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
+import { SortType } from "../const.js";
 
 const EXTRA_FILMS_COUNT = 2;
 const FILMS_START_COUNT = 5;
@@ -19,24 +20,27 @@ export default class MovieList {
   constructor(movieListContainer) {
     this._movieListContainer = movieListContainer;
     this._moviePresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._renderedFilmsCount = FILMS_START_COUNT;
     this._emptyListComponent = new EmptyFilmListView();
-    this._sortComponent = new SortView();
     this._filmSectionComponent = new FilmSectionView();
     this._filmListComponent = new FilmListView();
     this._filmContainerComponent = new FilmContainerView();
     this._mostCommentedFilmsComponent = new MostCommentedFilmsView();
     this._topRatedFilmsComponent = new TopRatedFilmsView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
+    this._sortComponent = null;
 
     this._showMoreButtonHandler = this._showMoreButtonHandler.bind(this);
     this._handleMovieCardChange = this._handleMovieCardChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(filmCards) {
     this._filmCards = filmCards.slice();
+    this._defaultSortFilms = filmCards.slice();
 
     if (filmCards.length === 0) {
       this._renderEmptyList();
@@ -66,6 +70,7 @@ export default class MovieList {
     Object
       .values(this._moviePresenter)
       .forEach((presenter) => presenter.destroy());
+
     this._moviePresenter = {};
 
     this._renderedFilmsCount = FILM_COUNT_PER_STEP;
@@ -73,12 +78,44 @@ export default class MovieList {
     remove(this._showMoreButtonComponent);
   }
 
-  _renderEmptyList() {
-    render(this._movieListContainer, this._emptyListComponent, RenderPosition.BEFOREEND);
-  };
+  _sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._filmCards.sort(compareFilmDate);
+        break;
+      case SortType.RAITING:
+        this._filmCards.sort(compareFilmRaiting);
+        break;
+      default:
+        this._filmCards = this._defaultSortFilms.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortFilms(sortType);
+    this._clearFilmsList();
+    this._renderMovieList();
+  }
 
   _renderSort() {
+    if (this._sortComponent !== null) {
+      remove(this._sortComponent);
+    }
+
+    this._sortComponent = new SortView(this._currentSortType);
+
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._movieListContainer, this._sortComponent, RenderPosition.BEFOREEND);
+  };
+
+  _renderEmptyList() {
+    render(this._movieListContainer, this._emptyListComponent, RenderPosition.BEFOREEND);
   };
 
   _showMoreButtonHandler() {
@@ -126,6 +163,13 @@ export default class MovieList {
       });
   };
 
+  _renderMovieCardsRoater() {
+    this._renderMovieCards(0, FILMS_START_COUNT);
+    if (this._filmCards.length > FILMS_START_COUNT) {
+      this._renderShowMoreButton();
+    }
+  }
+
   _renderMovieList() {
 
     this._renderSort();
@@ -135,13 +179,9 @@ export default class MovieList {
     render(this._filmListComponent, this._filmContainerComponent, RenderPosition.BEFOREEND);
 
 
-    this._renderMovieCards(0, FILMS_START_COUNT);
+    this._renderMovieCardsRoater();
 
-    if (this._filmCards.length > FILMS_START_COUNT) {
-      this._renderShowMoreButton();
-    }
-
-    this._renderTopRatedFilms();
-    this._renderMostCommentedFilms();
+    // this._renderTopRatedFilms();
+    // this._renderMostCommentedFilms();
   };
 };

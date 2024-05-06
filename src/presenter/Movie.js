@@ -93,7 +93,7 @@ export default class Movie {
   }
 
   _closePopup() {
-    remove(this._filmPopupComponent);
+    // remove(this._filmPopupComponent);
     this._siteBody.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this._onEscKeyDown);
     removeChild(this._siteBody, this._filmPopupComponent);

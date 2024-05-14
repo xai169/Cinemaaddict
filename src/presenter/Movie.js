@@ -1,6 +1,5 @@
 import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/popup.js";
-import CommentsView from "../view/comment.js";
 import { checkEsc } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 
@@ -88,7 +87,6 @@ export default class Movie {
   }
 
   _closePopup() {
-    // remove(this._filmPopupComponent);
     this._siteBody.classList.remove('hide-overflow');
     this._filmPopupComponent.reset(this._movieCard);
     document.removeEventListener('keydown', this._onEscKeyDown);

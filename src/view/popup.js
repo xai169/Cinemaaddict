@@ -1,6 +1,5 @@
-import AbstractView from './abstract.js';
 import SmartView from './smart.js';
-import { getShortDescription, setFilmCardControl } from '../mock/mock-film-card.js';
+import { setFilmCardControl } from '../mock/mock-film-card.js';
 import { compareCommentDate } from '../utils/film-cards.js';
 
 const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
@@ -188,7 +187,9 @@ export default class Popup extends SmartView {
 
   setPopupCloseClickHandler(callback) {
     this._callback.popupCloseClick = callback;
-    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupCloseClickHandler);
+    this.getElement()
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this._popupCloseClickHandler);
   };
 
   _watchListPopupClickHandler(evt) {
@@ -208,17 +209,23 @@ export default class Popup extends SmartView {
 
   setWatchListPopupClickHandler(callback) {
     this._callback.watchListPopupClick = callback;
-    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._watchListPopupClickHandler);
+    this.getElement()
+      .querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this._watchListPopupClickHandler);
   };
 
   setFavoritePopupClickHandler(callback) {
     this._callback.favoritePopupClick = callback;
-    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoritePopupClickHandler);
+    this.getElement()
+      .querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this._favoritePopupClickHandler);
   };
 
   setWatchedPopupClickHandler(callback) {
     this._callback.watchedPopupClick = callback;
-    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._watchedPopupClickHandler);
+    this.getElement()
+      .querySelector('.film-details__control-button--watched')
+      .addEventListener('click', this._watchedPopupClickHandler);
   };
 
   _commentEmojiChangeHandler(evt) {
@@ -231,48 +238,6 @@ export default class Popup extends SmartView {
 
     this.getElement().scrollTop = scrollTop;
   }
-
-  // _watchedPopupClickHandler(evt) {
-  //   const scrollTop = this.getElement().scrollTop;
-  //   evt.preventDefault();
-  //   this.updateData({
-  //     filter: {
-  //       isFavorite: this._data.filter.isFavorite,
-  //       isWatched: !this._data.filter.isWatched,
-  //       isWatchList: this._data.filter.isWatchList,
-  //     }
-  //   });
-
-  //   this.getElement().scrollTop = scrollTop;
-  // };
-
-  // _favoritePopupClickHandler(evt) {
-  //   const scrollTop = this.getElement().scrollTop;
-  //   evt.preventDefault();
-  //   this.updateData({
-  //     filter: {
-  //       isFavorite: !this._data.filter.isFavorite,
-  //       isWatched: this._data.filter.isWatched,
-  //       isWatchList: this._data.filter.isWatchList,
-  //     }
-  //   });
-
-  //   this.getElement().scrollTop = scrollTop;
-  // };
-
-  // _watchListPopupClickHandler(evt) {
-  //   const scrollTop = this.getElement().scrollTop;
-  //   evt.preventDefault();
-  //   this.updateData({
-  //     filter: {
-  //       isFavorite: this._data.filter.isFavorite,
-  //       isWatched: this._data.filter.isWatched,
-  //       isWatchList: !this._data.filter.isWatchList,
-  //     }
-  //   });
-
-  //   this.getElement().scrollTop = scrollTop;
-  // };
 
   _parseFilmToState(filmCard) {
     return Object.assign(

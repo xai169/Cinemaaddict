@@ -44,12 +44,13 @@ export default class MovieList {
     this._filmCards = filmCards.slice();
     this._defaultSortFilms = filmCards.slice();
     this._topRatedFilms = this._filmCards.slice().sort(compareFilmRaiting);
-
+    this._mostCommentedFilms = this._filmCards.slice().sort(compareCommentsNumber);
 
     if (filmCards.length === 0) {
       this._renderEmptyList();
       return;
     }
+
     this._renderMovieList();
   }
 
@@ -190,8 +191,7 @@ export default class MovieList {
   _renderMostCommentedFilms() {
     render(this._filmSectionComponent, this._mostCommentedFilmsComponent, RenderPosition.BEFOREEND);
     const mostCommentedList = this._mostCommentedFilmsComponent.getElement().querySelector('.films-list__container');
-    const mostCommentedFilms = this._filmCards.slice().sort(compareCommentsNumber);
-    mostCommentedFilms
+    this._mostCommentedFilms
       .slice(0, EXTRA_FILMS_COUNT)
       .forEach((filmCard) => {
         this._renderMostCommentedCard(filmCard, mostCommentedList);
@@ -201,8 +201,7 @@ export default class MovieList {
   _renderTopRatedFilms() {
     render(this._filmSectionComponent, this._topRatedFilmsComponent, RenderPosition.BEFOREEND);
     const topRatedList = this._topRatedFilmsComponent.getElement().querySelector('.films-list__container');
-    const topRatedFilms = this._filmCards.slice().sort(compareFilmRaiting);
-    topRatedFilms
+    this._topRatedFilms
       .slice(0, EXTRA_FILMS_COUNT)
       .forEach((filmCard) => {
         this._renderTopRatedCard(filmCard, topRatedList);

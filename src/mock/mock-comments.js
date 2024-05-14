@@ -8,7 +8,8 @@ const texts = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras
 const authorNames = ['Patrik', 'Liza', 'Pashok', 'Barak Obama'];
 
 const createComment = () => {
-  const commentsDate = dayjs.between('2023-03-18T03:00:00', dayjs()).format('YYYY/MM/DD HH:MM');
+  const commentsDate = dayjs.between('2023-03-18T03:00:00', dayjs());
+  const date = dayjs.between('1950-06-10T00:00:00', '2024-03-02T03:00:00');
 
   return {
     emoji: getRandomArrayElement(emojis),

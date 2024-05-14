@@ -13,4 +13,8 @@ const compareFilmDate = (filmCardA, filmCardB) => {
   return filmCardB.releaseDate.format('YYYY') - filmCardA.releaseDate.format('YYYY');
 };
 
-export { compareCommentsNumber, compareFilmRaiting, compareFilmDate };
+const compareCommentDate = (commentA, commentB) => {
+  return commentB.date - commentA.date;
+};
+
+export { compareCommentsNumber, compareFilmRaiting, compareFilmDate, compareCommentDate };

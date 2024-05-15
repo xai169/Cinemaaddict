@@ -27,4 +27,4 @@ render(siteMainElement, new MenuView(filters), RenderPosition.AFTERBEGIN);
 render(filmFooterStatistic, new FilmsCountView(filmCards), RenderPosition.BEFOREEND);
 
 
-movieListPresenter.init(filmCards);
+movieListPresenter.init();

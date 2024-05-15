@@ -9,7 +9,7 @@ import EmptyFilmListView from "../view/empty-film-list.js";
 import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
-import { SortType } from "../const.js";
+import { SortType, UserAction, UpdateType } from "../const.js";
 
 const EXTRA_FILMS_COUNT = 2;
 const FILMS_START_COUNT = 5;
@@ -34,6 +34,8 @@ export default class MovieList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._sortComponent = null;
 
+
+
     this._showMoreButtonHandler = this._showMoreButtonHandler.bind(this);
     this._handleMovieCardChange = this._handleMovieCardChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
@@ -47,6 +49,22 @@ export default class MovieList {
     }
 
     this._renderMovieList();
+  }
+
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+
+  _handleModelEvent(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _getMovies() {
@@ -94,19 +112,19 @@ export default class MovieList {
   };
 
   _renderMovieCard(movieCard, container) {
-    const moviePresenter = new MoviePresenter(container, this._handleMovieCardChange, this._handleModeChange);
+    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._handleModeChange);
     moviePresenter.init(movieCard);
     this._moviePresenter[movieCard.id] = moviePresenter;
   };
 
   _renderTopRatedCard(movieCard, container) {
-    const topRatedPresenter = new MoviePresenter(container, this._handleMovieCardChange, this._handleModeChange);
+    const topRatedPresenter = new MoviePresenter(container, this._handleViewAction, this._handleModeChange);
     topRatedPresenter.init(movieCard);
     this._topRatedPresenter[movieCard.id] = topRatedPresenter;
   }
 
   _renderMostCommentedCard(movieCard, container) {
-    const mostCommentedPresenter = new MoviePresenter(container, this._handleMovieCardChange, this._handleModeChange);
+    const mostCommentedPresenter = new MoviePresenter(container, this._handleViewAction, this._handleModeChange);
     mostCommentedPresenter.init(movieCard);
     this._mostCommentedPresenter[movieCard.id] = mostCommentedPresenter;
   }

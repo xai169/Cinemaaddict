@@ -2,6 +2,7 @@ import FilmCardView from "../view/film-card.js";
 import PopupView from "../view/popup.js";
 import { checkEsc } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
+import { UserAction, UpdateType } from "../const.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -96,6 +97,8 @@ export default class Movie {
 
   _handleWatchListClick() {
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._movieCard,
@@ -112,6 +115,8 @@ export default class Movie {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._movieCard,
@@ -128,6 +133,8 @@ export default class Movie {
 
   _handleWathedClick() {
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._movieCard,

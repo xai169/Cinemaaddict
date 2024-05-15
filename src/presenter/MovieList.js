@@ -17,7 +17,8 @@ const FILMS_START_COUNT = 5;
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer) {
+  constructor(movieListContainer, moviesModel) {
+    this._moviesModel = moviesModel;
     this._movieListContainer = movieListContainer;
     this._moviePresenter = {};
     this._topRatedPresenter = {};
@@ -52,6 +53,10 @@ export default class MovieList {
     }
 
     this._renderMovieList();
+  }
+
+  _getMovies() {
+    return this._moviesModel.getMovies();
   }
 
   _handleMovieCardChange(updatedMovieCard) {

@@ -7,7 +7,7 @@ import { render, RenderPosition } from './utils/render.js';
 import MovieListPresenter from './presenter/MovieList.js';
 import MoviesModel from './model/movies.js';
 
-const FILM_CARDS_COUNT = 20;
+const FILM_CARDS_COUNT = 2;
 
 //Генерация данных
 const filmCards = new Array(FILM_CARDS_COUNT).fill().map(generateFilmCard);

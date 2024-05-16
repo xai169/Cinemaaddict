@@ -30,6 +30,10 @@ export default class Movie {
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleWathedClick = this._handleWathedClick.bind(this);
+
+    this._handlePopupWatchListClick = this._handlePopupWatchListClick.bind(this);
+    this._handlePopupFavoriteClick = this._handlePopupFavoriteClick.bind(this);
+    this._handlePopupWathedClick = this._handlePopupWathedClick.bind(this);
   }
 
   init(movieCard) {
@@ -49,9 +53,9 @@ export default class Movie {
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchedClickHandler(this._handleWathedClick);
 
-    this._filmPopupComponent.setWatchListPopupClickHandler(this._handleWatchListClick);
-    this._filmPopupComponent.setFavoritePopupClickHandler(this._handleFavoriteClick);
-    this._filmPopupComponent.setWatchedPopupClickHandler(this._handleWathedClick);
+    this._filmPopupComponent.setWatchListPopupClickHandler(this._handlePopupWatchListClick);
+    this._filmPopupComponent.setFavoritePopupClickHandler(this._handlePopupFavoriteClick);
+    this._filmPopupComponent.setWatchedPopupClickHandler(this._handlePopupWathedClick);
 
     if (oldFilmCard === null) {
       render(this._movieCardListElement, this._filmComponent, RenderPosition.BEFOREEND);
@@ -91,14 +95,22 @@ export default class Movie {
     this._siteBody.classList.remove('hide-overflow');
     this._filmPopupComponent.reset(this._movieCard);
     document.removeEventListener('keydown', this._onEscKeyDown);
-    removeChild(this._siteBody, this._filmPopupComponent);
+    remove(this._filmPopupComponent)
     this._mode = Mode.DEFAULT;
+    this._changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      Object.assign(
+        {},
+        this._movieCard,
+      ),
+    );
   };
 
   _handleWatchListClick() {
     this._changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._movieCard,
@@ -116,7 +128,7 @@ export default class Movie {
   _handleFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_MOVIE,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._movieCard,
@@ -132,6 +144,60 @@ export default class Movie {
   }
 
   _handleWathedClick() {
+    this._changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.MINOR,
+      Object.assign(
+        {},
+        this._movieCard,
+        {
+          filter: {
+            isFavorite: this._movieCard.filter.isFavorite,
+            isWatched: !this._movieCard.filter.isWatched,
+            isWatchList: this._movieCard.filter.isWatchList,
+          }
+        },
+      ),
+    );
+  };
+
+  _handlePopupWatchListClick() {
+    this._changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.PATCH,
+      Object.assign(
+        {},
+        this._movieCard,
+        {
+          filter: {
+            isFavorite: this._movieCard.filter.isFavorite,
+            isWatched: this._movieCard.filter.isWatched,
+            isWatchList: !this._movieCard.filter.isWatchList,
+          }
+        },
+      ),
+    );
+  }
+
+  _handlePopupFavoriteClick() {
+    this._changeData(
+      UserAction.UPDATE_MOVIE,
+      UpdateType.PATCH,
+      Object.assign(
+        {},
+        this._movieCard,
+        {
+          filter: {
+            isFavorite: !this._movieCard.filter.isFavorite,
+            isWatched: this._movieCard.filter.isWatched,
+            isWatchList: this._movieCard.filter.isWatchList,
+          }
+        },
+      ),
+    );
+  }
+
+  _handlePopupWathedClick() {
     this._changeData(
       UserAction.UPDATE_MOVIE,
       UpdateType.PATCH,

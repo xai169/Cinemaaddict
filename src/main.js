@@ -5,26 +5,27 @@ import { generateFilmCard } from './mock/mock-film-card.js';
 import { setFiltersCount } from './mock/mock-filters.js';
 import { render, RenderPosition } from './utils/render.js';
 import MovieListPresenter from './presenter/MovieList.js';
+import FilterPresenter from './presenter/Filter.js';
 import MoviesModel from './model/movies.js';
+import FilterModel from './model/filter.js';
 
-const FILM_CARDS_COUNT = 2;
+const FILM_CARDS_COUNT = 20;
 
 //Генерация данных
 const filmCards = new Array(FILM_CARDS_COUNT).fill().map(generateFilmCard);
-const filters = setFiltersCount(filmCards);
 
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(filmCards);
 
-const siteHeaderElement = document.querySelector('.header');
+const filterModel = new FilterModel();
+
 const siteMainElement = document.querySelector('.main');
 const filmFooterStatistic = document.querySelector('.footer__statistics');
 
-const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel);
-
-render(siteHeaderElement, new UserRankView(filters), RenderPosition.BEFOREEND);
-render(siteMainElement, new MenuView(filters), RenderPosition.AFTERBEGIN);
 render(filmFooterStatistic, new FilmsCountView(filmCards), RenderPosition.BEFOREEND);
 
+const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMainElement, moviesModel, filterModel);
 
+filterPresenter.init();
 movieListPresenter.init();

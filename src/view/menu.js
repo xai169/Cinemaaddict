@@ -1,30 +1,49 @@
 import AbstractView from './abstract.js';
+import { FilterType } from "../const.js";
 
-const createMenuTemplate = (filters) => {
+const createFilterItemTemplate = (filter, currentFilterType) => {
+  const { type, name, count } = filter;
+  if (type === FilterType.ALL) {
+    return `<a id="${type}" href="#${FilterType.ALL.toLowerCase()}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name}</a>`
+  }
+
+  return `<a id="${type}" href="#${name.toLowerCase()}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name}<span class="main-navigation__item-count">${count}</span></a>`
+}
+
+const createMenuTemplate = (filterItems, currentFilterType) => {
+  const FilterItemsTemplate = filterItems.map((filter) => createFilterItemTemplate(filter, currentFilterType))
+    .join('');
   return `<nav class="main-navigation">
   <div class="main-navigation__items">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${filters.watchList}</span></a>
-    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${filters.history}</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${filters.favorite}</span></a>
+    ${FilterItemsTemplate}
   </div>
   <a href="#stats" class="main-navigation__additional">Stats</a>
-</nav>
-
-<ul class="sort">
-  <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-  <li><a href="#" class="sort__button">Sort by date</a></li>
-  <li><a href="#" class="sort__button">Sort by rating</a></li>
-</ul>`;
+</nav>`
 }
 
 export default class Menu extends AbstractView {
-  constructor(filters) {
+  constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
+    this._currentFilterType = currentFilterType;
+
+    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuTemplate(this._filters);
+    return createMenuTemplate(this._filters, this._currentFilterType);
+  }
+
+  _filterTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.id);
+  }
+
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().querySelectorAll('.main-navigation__item')
+      .forEach((item) => {
+        item.addEventListener('click', this._filterTypeChangeHandler);
+      })
   }
 };

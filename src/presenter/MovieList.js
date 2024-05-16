@@ -10,15 +10,17 @@ import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../u
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
 import { SortType, UserAction, UpdateType } from "../const.js";
+import { filter, userRank } from "../utils/filter.js";
 
 const EXTRA_FILMS_COUNT = 2;
 const FILMS_START_COUNT = 5;
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel) {
-    this._moviesModel = moviesModel;
+  constructor(movieListContainer, moviesModel, filterModel) {
     this._movieListContainer = movieListContainer;
+    this._moviesModel = moviesModel;
+    this._filterModel = filterModel;
     this._moviePresenter = {};
     this._topRatedPresenter = {};
     this._mostCommentedPresenter = {};
@@ -44,6 +46,7 @@ export default class MovieList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -73,62 +76,59 @@ export default class MovieList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._moviePresenter[data.id].init(data);
-        this._topRatedPresenter[data.id].init(data);
-        this._mostCommentedPresenter[data.id].init(data);
+        Object
+          .values(this._moviePresenter)
+          .forEach((presenter) => {
+            if (presenter._movieCard.id === data.id) {
+              this._moviePresenter[data.id].init(data);
+            }
+          });
+
+        Object
+          .values(this._topRatedPresenter)
+          .forEach((presenter) => {
+            if (presenter._movieCard.id === data.id) {
+              this._topRatedPresenter[data.id].init(data);
+            }
+          });
+
+        Object
+          .values(this._mostCommentedPresenter)
+          .forEach((presenter) => {
+            if (presenter._movieCard.id === data.id) {
+              this._mostCommentedPresenter[data.id].init(data);
+            }
+          });
         break
       case UpdateType.MINOR:
         this._clearFilmsList();
         this._renderMovieList();
-        // Перерисовка спика фильмов
         break
       case UpdateType.MAJOR:
-        // Перерисовка всей страницы
+        this._clearFilmsList({ resetRenderedMoviesCount: true, resetSortType: true });
+        this._renderMovieList();
         break
     }
   }
 
   _getMovies() {
+    const filterType = this._filterModel.getFilter();
+    // console.log(filterType);
+    const movies = this._moviesModel.getMovies();
+    const filtredMovies = filter[filterType](movies);
+
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._moviesModel.getMovies().slice().sort(compareFilmDate);
+        return filtredMovies.slice().sort(compareFilmDate);
       case SortType.RAITING:
-        return this._moviesModel.getMovies().slice().sort(compareFilmRaiting);
+        return filtredMovies.slice().sort(compareFilmRaiting);
     }
 
     this._mostCommentedFilms = this._moviesModel.getMovies().slice().sort(compareCommentsNumber);
     this._topRatedFilms = this._moviesModel.getMovies().slice().sort(compareFilmRaiting);
 
-    return this._moviesModel.getMovies();
+    return filtredMovies;
   }
-
-  // _handleMovieCardChange(updatedMovieCard) {
-  //   this._filmCards = updateItem(this._filmCards, updatedMovieCard);
-
-  //   Object
-  //     .values(this._moviePresenter)
-  //     .forEach((presenter) => {
-  //       if (presenter._movieCard.id === updatedMovieCard.id) {
-  //         this._moviePresenter[updatedMovieCard.id].init(updatedMovieCard);
-  //       }
-  //     });
-
-  //   Object
-  //     .values(this._topRatedPresenter)
-  //     .forEach((presenter) => {
-  //       if (presenter._movieCard.id === updatedMovieCard.id) {
-  //         this._topRatedPresenter[updatedMovieCard.id].init(updatedMovieCard);
-  //       }
-  //     });
-
-  //   Object
-  //     .values(this._mostCommentedPresenter)
-  //     .forEach((presenter) => {
-  //       if (presenter._movieCard.id === updatedMovieCard.id) {
-  //         this._mostCommentedPresenter[updatedMovieCard.id].init(updatedMovieCard);
-  //       }
-  //     });
-  // };
 
   _renderMovieCard(movieCard) {
     const moviePresenter = new MoviePresenter(this._filmContainerComponent, this._handleViewAction, this._handleModeChange);

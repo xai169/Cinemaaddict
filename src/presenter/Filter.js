@@ -28,17 +28,20 @@ export default class Filter {
     this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
+    const prevUserRankComponent = this._userRankComponent;
     const userRank = this._getUserRank();
     this._userRankComponent = new UserRankView(userRank);
-    render(this._siteHeaderElement, this._userRankComponent, RenderPosition.BEFOREEND);
 
-    if (prevFilterComponent === null) {
+    if (prevFilterComponent === null && prevUserRankComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._siteHeaderElement, this._userRankComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     replace(this._filterComponent, prevFilterComponent);
+    replace(this._userRankComponent, prevUserRankComponent);
     remove(prevFilterComponent);
+    remove(prevUserRankComponent);
   }
 
   _handleModelEvent() {

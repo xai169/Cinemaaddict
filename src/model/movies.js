@@ -43,7 +43,7 @@ export default class Movies extends Observer {
       ...this._movies.slice(index + 1),
     ];
 
-    this._notify(updateType);
+    this._notify(updateType, update);
   }
 
   deleteMovieComment = (updateType, update) => {

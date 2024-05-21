@@ -231,7 +231,7 @@ export default class Popup extends SmartView {
         author: 'Obamna',
         date: dayjs(),
       }
-
+      this._parseStateToFilm(this._data);
       this._callback.formSubmit(newComment);
     }
   }
@@ -320,7 +320,6 @@ export default class Popup extends SmartView {
       isWatched: this._data.filter.isWatched,
       isWatchList: this._data.filter.isWatchList,
     }
-    console.log(data);
 
     delete data.emojiIcon;
     delete data.hasEmoji;

@@ -239,11 +239,10 @@ export default class Movie {
   }
 
   _addComment(newComment) {
-    console.log(newComment);
     const currentComments = this._movieCard.comments.slice();
 
     this._changeData(
-      UserAction.DELETE_MOVIE_COMMENT,
+      UserAction.ADD_MOVIE_COMMENT,
       UpdateType.PATCH,
       Object.assign(
         {},

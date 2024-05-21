@@ -64,7 +64,7 @@ export default class MovieList {
         this._moviesModel.updateMovie(updateType, update);
         break
       case UserAction.ADD_MOVIE_COMMENT:
-        // Здесь будет способ добавление нового комментария
+        this._moviesModel.addMovieComment(updateType, update);
         break
       case UserAction.DELETE_MOVIE_COMMENT:
         this._moviesModel.deleteMovieComment(updateType, update);
@@ -113,7 +113,6 @@ export default class MovieList {
 
   _getMovies() {
     const filterType = this._filterModel.getFilter();
-    // console.log(filterType);
     const movies = this._moviesModel.getMovies();
     const filtredMovies = filter[filterType](movies);
 

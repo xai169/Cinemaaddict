@@ -4,6 +4,7 @@ import { compareCommentDate } from '../utils/film-cards.js';
 import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 import { nanoid } from 'nanoid';
+import he from 'he';
 
 const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
   return `${hasEmoji ? `<img src="./images/emoji/${emojiIcon}.png" width="55" height="55" alt="emoji-${emojiIcon}">` : ``}`;
@@ -284,7 +285,7 @@ export default class Popup extends SmartView {
 
   _commentTextAreaHandler(evt) {
     this.updateData({
-      newCommentText: evt.target.value
+      newCommentText: he.encode(evt.target.value)
     }, true);
   }
 

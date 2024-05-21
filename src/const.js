@@ -5,9 +5,9 @@ export const SortType = {
 };
 
 export const UserAction = {
-  UPDATE_TASK: 'UPDATE_MOVIE',
-  ADD_TASK: 'ADD_MOVIE_COMMENT',
-  DELETE_TASK: 'DELETE_MOVIE_COMMENT',
+  UPDATE_MOVIE: 'UPDATE_MOVIE',
+  ADD_MOVIE_COMMENT: 'ADD_MOVIE_COMMENT',
+  DELETE_MOVIE_COMMENT: 'DELETE_MOVIE_COMMENT',
 };
 
 export const UpdateType = {

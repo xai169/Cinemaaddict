@@ -67,7 +67,7 @@ export default class MovieList {
         // Здесь будет способ добавление нового комментария
         break
       case UserAction.DELETE_MOVIE_COMMENT:
-        // Здесь будет способ удаления комментария
+        this._moviesModel.deleteMovieComment(updateType, update);
         break
 
     }

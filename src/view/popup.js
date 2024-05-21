@@ -88,7 +88,7 @@ const createPopupTemplate = (filmCard) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${filmCard.duration}</td>
+              <td class="film-details__cell">${filmCard.duration.format('h[h] m[min]')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

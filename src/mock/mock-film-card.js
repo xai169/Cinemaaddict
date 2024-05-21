@@ -78,7 +78,7 @@ const generateFilmCard = () => {
     title: getRandomArrayElement(titles),
     raiting: getRandom(0, 10).toFixed(1),
     releaseDate: date,
-    duration: duration.format('h[h] m[min]'),
+    duration: duration,
     genre: generateGenres(),
     description: generateFilmDescription(),
     comments: generateComments(),

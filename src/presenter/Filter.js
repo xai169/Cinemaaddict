@@ -5,6 +5,7 @@ import { filter, userRank } from "../utils/filter.js";
 import { FilterType, UserRanks, UserAction, UpdateType } from "../const";
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 
+
 export default class Filter {
   constructor(filterContainer, moviesModel, filterModel) {
     this._siteHeaderElement = document.querySelector('.header');
@@ -18,6 +19,7 @@ export default class Filter {
     this._userRankComponent = null;
     this._statsComponent = null;
     this._prevStatsComponent = null;
+    this._UserRank = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
@@ -33,10 +35,10 @@ export default class Filter {
     this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
     this._filterComponent.setStatsClickHandler(this._handleStatsClick);
+    this._getUserRank();
 
     const prevUserRankComponent = this._userRankComponent;
-    const userRank = this._getUserRank();
-    this._userRankComponent = new UserRankView(userRank);
+    this._userRankComponent = new UserRankView(this._UserRank);
 
     // this._prevStatsComponent = this._statsComponent;
     // this._statsComponent = new StatsView();
@@ -65,9 +67,15 @@ export default class Filter {
 
   _handleStatsClick() {
     this._filterModel.setFilter(UpdateType.CLEAR, FilterType.STATS);
+    const movies = this._moviesModel.getMovies();
+    const historyMovies = filter[FilterType.HISTORY](movies);
+    const durationMovies = historyMovies.map((movie) => movie.duration);
+    const duration = durationMovies[1] + durationMovies[2];
+    console.log(durationMovies);
+
 
     this._prevStatsComponent = this._statsComponent;
-    this._statsComponent = new StatsView();
+    this._statsComponent = new StatsView(this._UserRank);
 
     if (this._prevStatsComponent === null) {
       render(this._siteMainElement, this._statsComponent, RenderPosition.BEFOREEND);
@@ -121,7 +129,22 @@ export default class Filter {
   _getUserRank() {
     const movies = this._moviesModel.getMovies();
 
-    return filter[FilterType.HISTORY](movies).length;
+    const filmCount = filter[FilterType.HISTORY](movies).length;
+
+    if (filmCount === 0) {
+      this._UserRank = '';
+    }
+    if (filmCount > 1) {
+      this._UserRank = 'novice';
+    }
+    if (filmCount > 10) {
+      this._UserRank = 'fan';
+    }
+    if (filmCount > 21) {
+      this._UserRank = 'movie buff';
+    };
+
+    return this._UserRank;
   }
 }
 

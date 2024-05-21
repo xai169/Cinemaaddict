@@ -14,6 +14,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  CLEAR: 'CLEAR',
 };
 
 export const FilterType = {
@@ -21,6 +22,7 @@ export const FilterType = {
   WATCHLIST: 'Watchlist',
   HISTORY: 'History',
   FAVORITE: 'Favorites',
+  STATS: 'Stats',
 }
 
 export const UserRanks = {
@@ -29,3 +31,8 @@ export const UserRanks = {
   FAN: 'FAN',
   MOVIE_BUFF: 'Movie Buff',
 }
+
+export const MenuItem = {
+  MOVIE_LIST: 'MOVIE_LIST',
+  STATS: 'STATS',
+};

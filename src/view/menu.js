@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 import { FilterType } from "../const.js";
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
@@ -17,17 +17,18 @@ const createMenuTemplate = (filterItems, currentFilterType) => {
   <div class="main-navigation__items">
     ${FilterItemsTemplate}
   </div>
-  <a href="#stats" class="main-navigation__additional">Stats</a>
+  <a href="#stats" class="main-navigation__additional ${currentFilterType === FilterType.STATS ? 'main-navigation__additional--active' : ''}">Stats</a>
 </nav>`
 }
 
-export default class Menu extends AbstractView {
+export default class Menu extends SmartView {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;
     this._currentFilterType = currentFilterType;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statsClickHandler = this._statsClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -39,11 +40,23 @@ export default class Menu extends AbstractView {
     this._callback.filterTypeChange(evt.target.id);
   }
 
+  _statsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.statsClick();
+  }
+
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
     this.getElement().querySelectorAll('.main-navigation__item')
       .forEach((item) => {
         item.addEventListener('click', this._filterTypeChangeHandler);
       })
+  }
+
+  setStatsClickHandler(callback) {
+    this._callback.statsClick = callback;
+    this.getElement()
+      .querySelector('.main-navigation__additional')
+      .addEventListener('click', this._statsClickHandler);
   }
 };

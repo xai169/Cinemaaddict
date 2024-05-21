@@ -9,7 +9,7 @@ import EmptyFilmListView from "../view/empty-film-list.js";
 import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
-import { SortType, UserAction, UpdateType } from "../const.js";
+import { SortType, UserAction, UpdateType, FilterType } from "../const.js";
 import { filter, userRank } from "../utils/filter.js";
 
 const EXTRA_FILMS_COUNT = 2;
@@ -56,6 +56,16 @@ export default class MovieList {
     }
 
     this._renderMovieList();
+
+    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  destroy() {
+    this._clearFilmsList({ resetRenderedMoviesCount: true, resetSortType: true });
+
+    this._moviesModel.deleteObserver(this._handleModelEvent);
+    this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -108,11 +118,17 @@ export default class MovieList {
         this._clearFilmsList({ resetRenderedMoviesCount: true, resetSortType: true });
         this._renderMovieList();
         break
+      case UpdateType.CLEAR:
+        this._clearFilmsList({ resetRenderedMoviesCount: true, resetSortType: true });
+        break
     }
   }
 
   _getMovies() {
     const filterType = this._filterModel.getFilter();
+    if (filterType === FilterType.STATS) {
+      return this._moviesModel.getMovies();
+    }
     const movies = this._moviesModel.getMovies();
     const filtredMovies = filter[filterType](movies);
 
@@ -186,6 +202,7 @@ export default class MovieList {
 
     remove(this._showMoreButtonComponent);
     remove(this._sortComponent);
+    remove(this._filmSectionComponent);
     remove(this._emptyListComponent);
   }
 

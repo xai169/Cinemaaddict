@@ -67,15 +67,15 @@ export default class Filter {
 
   _handleStatsClick() {
     this._filterModel.setFilter(UpdateType.CLEAR, FilterType.STATS);
+
     const movies = this._moviesModel.getMovies();
     const historyMovies = filter[FilterType.HISTORY](movies);
     const durationMovies = historyMovies.map((movie) => movie.duration);
-    const duration = durationMovies[1] + durationMovies[2];
-    console.log(durationMovies);
+    const duration = durationMovies.reduce((acc, duration) => acc + duration);
 
 
     this._prevStatsComponent = this._statsComponent;
-    this._statsComponent = new StatsView(this._UserRank);
+    this._statsComponent = new StatsView(this._UserRank, historyMovies, movies);
 
     if (this._prevStatsComponent === null) {
       render(this._siteMainElement, this._statsComponent, RenderPosition.BEFOREEND);

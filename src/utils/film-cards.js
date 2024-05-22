@@ -17,4 +17,15 @@ const compareCommentDate = (commentA, commentB) => {
   return commentB.date - commentA.date;
 };
 
-export { compareCommentsNumber, compareFilmRaiting, compareFilmDate, compareCommentDate };
+const getRunTime = (duration) => {
+  const hours = Math.round(duration / 60);
+  const minutes = duration % 60;
+
+  if (minutes === 0) {
+    return `${hours}h`;
+  }
+
+  return `${hours}h ${minutes}min`
+}
+
+export { compareCommentsNumber, compareFilmRaiting, compareFilmDate, compareCommentDate, getRunTime };

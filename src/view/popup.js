@@ -1,6 +1,6 @@
 import SmartView from './smart.js';
 import { setFilmCardControl } from '../mock/mock-film-card.js';
-import { compareCommentDate } from '../utils/film-cards.js';
+import { compareCommentDate, getRunTime } from '../utils/film-cards.js';
 import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 import { nanoid } from 'nanoid';
@@ -43,6 +43,8 @@ const createPopupTemplate = (filmCard) => {
   const changeEmojis = CreateEmojiChanger(filmCard.emojiIcon, filmCard.hasEmoji);
 
   const renderComments = createCommentsTemplate(filmCard.comments);
+
+  const runTime = getRunTime(filmCard.duration);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -88,7 +90,7 @@ const createPopupTemplate = (filmCard) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${filmCard.duration.format('h[h] m[min]')}</td>
+              <td class="film-details__cell">${runTime}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

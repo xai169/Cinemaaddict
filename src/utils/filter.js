@@ -1,4 +1,4 @@
-import { FilterType, UserRanks } from "../const.js";
+import { FilterType, UserRanks, GenreType } from "../const.js";
 
 export const filter = {
   [FilterType.ALL]: (films) => films.filter((film) => film),
@@ -7,10 +7,10 @@ export const filter = {
   [FilterType.FAVORITE]: (films) => films.filter((film) => film.filter.isFavorite),
 }
 
-export const userRank = {
-  [UserRanks.NO_RANK]: (films) => films.filter((film) => film),
-  [UserRanks.NOVICE]: (films) => films.filter((film) => film.filter.isWatchList),
-  [UserRanks.FAN]: (films) => films.filter((film) => film.filter.isWatched),
-  [UserRanks.MOVIE_BUFF]: (films) => films.filter((film) => film.filter.isFavorite),
-  // Доделать
+export const genreFilter = {
+  [GenreType.SCI_FI]: (genres) => genres.filter((genre) => genre === 'Sci-Fi'),
+  [GenreType.ANIMATION]: (genres) => genres.filter((genre) => genre === 'Animation'),
+  [GenreType.FANTASY]: (genres) => genres.filter((genre) => genre === 'Fantasy'),
+  [GenreType.COMEDY]: (genres) => genres.filter((genre) => genre === 'Comedy'),
+  [GenreType.TV_SERIES]: (genres) => genres.filter((genre) => genre === 'TV Series'),
 }

@@ -20,25 +20,11 @@ const filterModel = new FilterModel();
 
 const siteMainElement = document.querySelector('.main');
 const filmFooterStatistic = document.querySelector('.footer__statistics');
-const stats = new StatsView();
 
 render(filmFooterStatistic, new FilmsCountView(filmCards), RenderPosition.BEFOREEND);
 
 const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, moviesModel, filterModel);
-
-// const siteMenuClickHandler = (menuItem) => {
-//   switch (menuItem) {
-//     case MenuItem.MOVIE_LIST:
-//       movieListPresenter.init();
-//       stats.hideElement();
-//       break;
-//     case MenuItem.STATS:
-//       movieListPresenter.destroy();
-//       stats.showElement();
-//       break;
-//   }
-// }
 
 filterPresenter.init();
 movieListPresenter.init();

@@ -32,7 +32,10 @@ export const UserRanks = {
   MOVIE_BUFF: 'Movie Buff',
 }
 
-export const MenuItem = {
-  MOVIE_LIST: 'MOVIE_LIST',
-  STATS: 'STATS',
+export const GenreType = {
+  SCI_FI: 'Sci-Fi',
+  ANIMATION: 'Animation',
+  FANTASY: 'Fantasy',
+  COMEDY: 'Comedy',
+  TV_SERIES: 'TV Series',
 };

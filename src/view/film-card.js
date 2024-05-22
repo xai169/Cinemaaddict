@@ -1,13 +1,16 @@
 import AbstractView from './abstract.js';
 import { getShortDescription, setFilmCardControl } from '../mock/mock-film-card.js';
+import { getRunTime } from '../utils/film-cards.js';
 
 const createFilmCardTemplate = (filmCard) => {
+  const runTime = getRunTime(filmCard.duration);
+
   return `<article class="film-card">
           <h3 class="film-card__title">${filmCard.title}</h3>
           <p class="film-card__rating">${filmCard.raiting}</p>
           <p class="film-card__info">
             <span class="film-card__year">${filmCard.releaseDate.format('YYYY')}</span>
-            <span class="film-card__duration">${filmCard.duration}</span>
+            <span class="film-card__duration">${runTime}</span>
             <span class="film-card__genre">${filmCard.genre[0]}</span>
           </p>
           <img src="./images/posters/${filmCard.poster}" alt="" class="film-card__poster">

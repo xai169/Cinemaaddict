@@ -1,19 +1,71 @@
 import SmartView from "./smart.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { getRunTime } from '../utils/film-cards.js';
+import { genreFilter } from '../utils/filter.js';
+import { GenreType } from "../const.js";
 
-const renderChart = (statisticCtx) => {
-  // const BAR_HEIGHT = 50;
-  // // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
-  // statisticCtx.height = BAR_HEIGHT * 5;
+const getSumDuration = (historyMovies) => {
+  return historyMovies
+    .slice()
+    .map((movie) => movie.duration)
+    .reduce((acc, duration) => acc + duration);
+}
+
+
+
+const getGenresCount = (historyMovies) => {
+  const genres = historyMovies
+    .slice()
+    .map((movie) => movie.genre)
+    .flat();
+  console.log(genres);
+  return {
+    SciFi: genreFilter[GenreType.SCI_FI](genres).length,
+    Animation: genreFilter[GenreType.ANIMATION](genres).length,
+    Fantasy: genreFilter[GenreType.FANTASY](genres).length,
+    Comedy: genreFilter[GenreType.COMEDY](genres).length,
+    TVseries: genreFilter[GenreType.TV_SERIES](genres).length,
+  };
+}
+
+const getTopGenre = (historyMovies) => {
+  const genres = historyMovies
+    .slice()
+    .map((movie) => movie.genre)
+    .flat();
+  return genres.sort((a, b) =>
+    genres.filter(v => v === a).length - genres.filter(v => v === b).length
+  ).pop();
+}
+
+const getStatRunTime = (duration) => {
+  const hours = Math.round(duration / 60);
+  const minutes = duration % 60;
+
+  if (minutes === 0) {
+    return `${hours} <span class="statistic__item-description">h</span>`;
+  }
+
+  return `${hours} <span class="statistic__item-description">h</span> ${minutes} <span class="statistic__item-description">m</span>`
+}
+
+const renderChart = (statisticCtx, historyMovies) => {
+  const BAR_HEIGHT = 50;
+  // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
+  statisticCtx.height = BAR_HEIGHT * 5;
+
+  const genres = Object.values(GenreType);
+
+  const genresCount = Object.values(getGenresCount(historyMovies));
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: 'horizontalBar',
     data: {
-      labels: ['Sci-Fi', 'Animation', 'Fantasy', 'Comedy', 'TV Series'],
+      labels: genres,
       datasets: [{
-        data: [11, 8, 7, 4, 3],
+        data: genresCount,
         backgroundColor: '#ffe800',
         hoverBackgroundColor: '#ffe800',
         anchor: 'start',
@@ -65,7 +117,14 @@ const renderChart = (statisticCtx) => {
   });
 }
 
-const createStatsTemplate = (userRank) => {
+const createStatsTemplate = (userRank, historyMovies) => {
+
+  const totalDuration = getStatRunTime(getSumDuration(historyMovies));//Переделать верстку
+
+  const totalWatchedMovies = historyMovies.length;
+
+  const topGenre = getTopGenre(historyMovies);
+
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
@@ -95,15 +154,15 @@ const createStatsTemplate = (userRank) => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${totalWatchedMovies} <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${totalDuration}</p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
+      <p class="statistic__item-text">${topGenre}</p>
     </li>
   </ul>
 
@@ -115,9 +174,11 @@ const createStatsTemplate = (userRank) => {
 }
 
 export default class Stats extends SmartView {
-  constructor(userRank) {
+  constructor(userRank, historyMovies, movies) {
     super();
     this._userRank = userRank;
+    this._historyMovies = historyMovies;
+    this._movies = movies;
 
     this._chart = null;
 
@@ -125,7 +186,7 @@ export default class Stats extends SmartView {
   }
 
   getTemplate() {
-    return createStatsTemplate(this._userRank);
+    return createStatsTemplate(this._userRank, this._historyMovies, this._movies);
   }
 
   _setChart() {
@@ -133,6 +194,6 @@ export default class Stats extends SmartView {
       this._chart = null;
     }
     const statisticCtx = this.getElement().querySelector('.statistic__chart');
-    this._chart = renderChart(statisticCtx);
+    this._chart = renderChart(statisticCtx, this._historyMovies);
   }
 }

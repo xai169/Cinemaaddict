@@ -82,16 +82,16 @@ const generateFilmCard = () => {
     genre: generateGenres(),
     description: generateFilmDescription(),
     comments: generateComments(),
-    filter: {
-      isFavorite: Boolean(getRandomInt(0, 1)),
-      isWatched: Boolean(getRandomInt(0, 1)),
-      isWatchList: Boolean(getRandomInt(0, 1)),
-    },
     director: getRandomArrayElement(directors),
     writers: generateFilmWorkers(writers),
     actors: generateFilmWorkers(actors),
     country: getRandomArrayElement(countries),
     ageRaiting: getRandomArrayElement(ageRaitings),
+    filter: {
+      isFavorite: Boolean(getRandomInt(0, 1)),
+      isWatched: Boolean(getRandomInt(0, 1)),
+      isWatchList: Boolean(getRandomInt(0, 1)),
+    },
   }
 }
 

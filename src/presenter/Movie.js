@@ -123,6 +123,7 @@ export default class Movie {
             isFavorite: this._movieCard.filter.isFavorite,
             isWatched: this._movieCard.filter.isWatched,
             isWatchList: !this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),
@@ -141,6 +142,7 @@ export default class Movie {
             isFavorite: !this._movieCard.filter.isFavorite,
             isWatched: this._movieCard.filter.isWatched,
             isWatchList: this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),
@@ -159,6 +161,7 @@ export default class Movie {
             isFavorite: this._movieCard.filter.isFavorite,
             isWatched: !this._movieCard.filter.isWatched,
             isWatchList: this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),
@@ -177,6 +180,7 @@ export default class Movie {
             isFavorite: this._movieCard.filter.isFavorite,
             isWatched: this._movieCard.filter.isWatched,
             isWatchList: !this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),
@@ -195,6 +199,7 @@ export default class Movie {
             isFavorite: !this._movieCard.filter.isFavorite,
             isWatched: this._movieCard.filter.isWatched,
             isWatchList: this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),
@@ -213,6 +218,7 @@ export default class Movie {
             isFavorite: this._movieCard.filter.isFavorite,
             isWatched: !this._movieCard.filter.isWatched,
             isWatchList: this._movieCard.filter.isWatchList,
+            watchingDate: this._movieCard.filter.watchingDate,
           }
         },
       ),

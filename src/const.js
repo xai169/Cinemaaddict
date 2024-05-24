@@ -15,6 +15,7 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   CLEAR: 'CLEAR',
+  INIT: 'INIT',
 };
 
 export const FilterType = {

@@ -6,18 +6,20 @@ import ShowMoreButtonView from "../view/showmore-button.js";
 import TopRatedFilmsView from "../view/toprated-films.js";
 import MostCommentedFilmsView from "../view/mostcommented-films.js";
 import EmptyFilmListView from "../view/empty-film-list.js";
+import LoadingView from "../view/loading.js";
 import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
 import { SortType, UserAction, UpdateType, FilterType } from "../const.js";
 import { filter, userRank } from "../utils/filter.js";
+import MoviesModel from '../model/movies.js';
 
 const EXTRA_FILMS_COUNT = 2;
 const FILMS_START_COUNT = 5;
 const FILM_COUNT_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel, filterModel) {
+  constructor(movieListContainer, moviesModel, filterModel, api) {
     this._movieListContainer = movieListContainer;
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
@@ -25,6 +27,8 @@ export default class MovieList {
     this._topRatedPresenter = {};
     this._mostCommentedPresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
+    this._api = api;
 
     this._renderedFilmsCount = FILMS_START_COUNT;
     this._emptyListComponent = new EmptyFilmListView();
@@ -35,6 +39,7 @@ export default class MovieList {
     this._topRatedFilmsComponent = new TopRatedFilmsView();
     this._topRatedList = new FilmContainerView();
     this._mostCommentedList = new FilmContainerView();
+    this._loadingComponent = new LoadingView();
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -44,18 +49,11 @@ export default class MovieList {
     this._showMoreButtonHandler = this._showMoreButtonHandler.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._moviesModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    if (this._getMovies().length === 0) {
-      this._renderEmptyList();
-      return;
-    }
 
-    this._renderMovieList();
+    // this._renderMovieList();
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -71,7 +69,10 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        this._moviesModel.updateMovie(updateType, update);
+        console.log(MoviesModel.adaptToServer(update));
+        this._api.updateMovie(update).then((response) => {
+          this._moviesModel.updateMovie(updateType, response);
+        })
         break
       case UserAction.ADD_MOVIE_COMMENT:
         this._moviesModel.addMovieComment(updateType, update);
@@ -120,6 +121,11 @@ export default class MovieList {
         break
       case UpdateType.CLEAR:
         this._clearFilmsList({ resetRenderedMoviesCount: true, resetSortType: true });
+        break
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderMovieList();
         break
     }
   }
@@ -202,6 +208,7 @@ export default class MovieList {
 
     remove(this._showMoreButtonComponent);
     remove(this._sortComponent);
+    remove(this._loadingComponent);
     remove(this._filmSectionComponent);
     remove(this._emptyListComponent);
   }
@@ -230,6 +237,10 @@ export default class MovieList {
   _renderEmptyList() {
     render(this._movieListContainer, this._emptyListComponent, RenderPosition.BEFOREEND);
   };
+
+  _renderLoading() {
+    render(this._movieListContainer, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
 
   _showMoreButtonHandler() {
     const movieCount = this._getMovies().length;
@@ -291,6 +302,16 @@ export default class MovieList {
   }
 
   _renderMovieList() {
+
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
+    if (this._getMovies().length === 0) {
+      this._renderEmptyList();
+      return;
+    }
 
     this._renderSort();
 

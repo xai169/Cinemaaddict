@@ -1,30 +1,37 @@
-import StatsView from "./view/stats.js";
+import Api from "./api.js";
 import FilmsCountView from "./view/films-count.js";
-import { generateFilmCard } from './mock/mock-film-card.js';
 import { render, RenderPosition } from './utils/render.js';
 import MovieListPresenter from './presenter/MovieList.js';
 import FilterPresenter from './presenter/Filter.js';
 import MoviesModel from './model/movies.js';
 import FilterModel from './model/filter.js';
-import { MenuItem } from './const.js'
+import { UpdateType } from "./const.js";
 
-const FILM_CARDS_COUNT = 20;
 
-//Генерация данных
-const filmCards = new Array(FILM_CARDS_COUNT).fill().map(generateFilmCard);
-
-const moviesModel = new MoviesModel();
-moviesModel.setMovies(filmCards);
-
-const filterModel = new FilterModel();
+const AUTHORIZATION = 'Basic sdfjkgdfjkgndfgjdfn';
+const END_POINT = 'https://14.ecmascript.htmlacademy.pro/cinemaddict';
 
 const siteMainElement = document.querySelector('.main');
 const filmFooterStatistic = document.querySelector('.footer__statistics');
 
-render(filmFooterStatistic, new FilmsCountView(filmCards), RenderPosition.BEFOREEND);
+const api = new Api(END_POINT, AUTHORIZATION);
 
-const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel);
+const moviesModel = new MoviesModel();
+const filterModel = new FilterModel();
+
+const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, moviesModel, filterModel);
 
-filterPresenter.init();
+render(filmFooterStatistic, new FilmsCountView(api.getMovies()), RenderPosition.BEFOREEND);
+
+
 movieListPresenter.init();
+
+api.getMovies()
+  .then((movies) => {
+    moviesModel.setMovies(UpdateType.INIT, movies);
+    filterPresenter.init();
+  })
+  .catch(() => {
+    moviesModel.setMovies(UpdateType.INIT, []);
+  });

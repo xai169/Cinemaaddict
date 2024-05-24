@@ -20,7 +20,7 @@ const createCommentTemplate = (comment) => {
     <p class="film-details__comment-text">${text}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
-      <span class="film-details__comment-day">${date.format('YYYY/MM/DD HH:MM')}</span>
+      <span class="film-details__comment-day">${date}</span>
       <button class="film-details__comment-delete" data-id="${id}">Delete</button>
     </p>
   </div>
@@ -38,6 +38,12 @@ const createCommentsTemplate = (comments) => {
   return ``;
 }
 
+const createGenreTemplate = (genre) => {
+  return `<span class="film-details__genre">${genre}</span>`
+}
+
+const createGenresTeamplate = (genres) => genres.map((genre) => createGenreTemplate(genre)).join(``);
+
 const createPopupTemplate = (filmCard) => {
 
   const changeEmojis = CreateEmojiChanger(filmCard.emojiIcon, filmCard.hasEmoji);
@@ -45,6 +51,8 @@ const createPopupTemplate = (filmCard) => {
   const renderComments = createCommentsTemplate(filmCard.comments);
 
   const runTime = getRunTime(filmCard.duration);
+
+  const genres = createGenresTeamplate(filmCard.genre);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -54,16 +62,16 @@ const createPopupTemplate = (filmCard) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${filmCard.poster}" alt="">
+          <img class="film-details__poster-img" src="${filmCard.poster}" alt="">
 
-          <p class="film-details__age">${filmCard.ageRaiting}</p>
+          <p class="film-details__age">${filmCard.ageRaiting}+</p>
         </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${filmCard.title}</h3>
-              <p class="film-details__title-original">Original: ${filmCard.title}</p>
+              <p class="film-details__title-original">Original: ${filmCard.alternativeTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -99,9 +107,7 @@ const createPopupTemplate = (filmCard) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${filmCard.genre[0]}</span>
-                <span class="film-details__genre">${filmCard.genre[1]}</span>
-                <span class="film-details__genre">${filmCard.genre[2]}</span></td>
+                ${genres}
             </tr>
           </table>
 

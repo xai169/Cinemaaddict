@@ -3,6 +3,7 @@ import PopupView from "../view/popup.js";
 import { checkEsc } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 import { UserAction, UpdateType } from "../const.js";
+import Api from "../api.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -10,7 +11,7 @@ const Mode = {
 };
 
 export default class Movie {
-  constructor(movieCardListElement, changeData, changeMode) {
+  constructor(movieCardListElement, changeData, changeMode, api) {
     this._siteBody = document.querySelector('body');
 
     this._changeData = changeData;
@@ -18,6 +19,7 @@ export default class Movie {
     this._movieCardListElement = movieCardListElement;
     this._mode = Mode.DEFAULT;
     this._movieCard = {};
+    this._api = api;
 
     this._filmComponent = null;
     this._filmPopupComponent = null;
@@ -46,7 +48,7 @@ export default class Movie {
 
     this._filmComponent = new FilmCardView(this._movieCard);
 
-    this._filmPopupComponent = new PopupView(movieCard);
+    this._filmPopupComponent = new PopupView(this._movieCard, this._api);
 
     this._filmComponent.setPopupShowClickHandler(this._handlePopupShow);
     this._filmPopupComponent.setPopupCloseClickHandler(this._closePopup);
@@ -59,7 +61,7 @@ export default class Movie {
     this._filmPopupComponent.setFavoritePopupClickHandler(this._handlePopupFavoriteClick);
     this._filmPopupComponent.setWatchedPopupClickHandler(this._handlePopupWathedClick);
     this._filmPopupComponent.setDeleteCommentClickHandler(this._deleteComment);
-    this._filmPopupComponent.setFormSubmitHandler(this._addComment)
+    this._filmPopupComponent.setFormSubmitHandler(this._addComment);
 
     if (oldFilmCard === null) {
       render(this._movieCardListElement, this._filmComponent, RenderPosition.BEFOREEND);
@@ -84,6 +86,10 @@ export default class Movie {
   };
 
   _showPopup() {
+    this._api.getComments(this._movieCard)
+      .then((comments) => {
+        console.log(comments);
+      })
     append(this._siteBody, this._filmPopupComponent);
     this._siteBody.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);

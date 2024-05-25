@@ -71,7 +71,6 @@ export default class Movies extends Observer {
       {},
       movie,
       {
-        comments: [],
         poster: movie.film_info.poster,
         title: movie.film_info.title,
         alternativeTitle: movie.film_info.alternative_title,

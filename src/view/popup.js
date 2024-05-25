@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 import { nanoid } from 'nanoid';
 import he from 'he';
+import Api from "../api.js";
 
 const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
   return `${hasEmoji ? `<img src="./images/emoji/${emojiIcon}.png" width="55" height="55" alt="emoji-${emojiIcon}">` : ``}`;
@@ -164,10 +165,11 @@ const createPopupTemplate = (filmCard) => {
 }
 
 export default class Popup extends SmartView {
-  constructor(filmCard) {
+  constructor(filmCard, api) {
     super();
     this._filmCard = filmCard;
     this._data = this._parseFilmToState(this._filmCard);
+    this._api = api;
 
     this._popupCloseClickHandler = this._popupCloseClickHandler.bind(this);
     this._watchListPopupClickHandler = this._watchListPopupClickHandler.bind(this);

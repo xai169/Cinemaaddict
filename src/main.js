@@ -22,7 +22,7 @@ const filterModel = new FilterModel();
 const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, moviesModel, filterModel);
 
-render(filmFooterStatistic, new FilmsCountView(api.getMovies()), RenderPosition.BEFOREEND);
+render(filmFooterStatistic, new FilmsCountView("123", RenderPosition.BEFOREEND));
 
 
 movieListPresenter.init();

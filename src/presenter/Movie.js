@@ -72,6 +72,7 @@ export default class Movie {
   };
 
   _renderFilmDetails(film, comments) {
+
     this._filmPopupComponent = new PopupView(film, comments);
 
     this._siteBody.classList.add('hide-overflow');
@@ -85,6 +86,10 @@ export default class Movie {
     this._filmPopupComponent.setFormSubmitHandler(this._addComment);
 
     render(this._siteBody, this._filmPopupComponent, RenderPosition.BEFOREEND);
+
+    if (document.querySelectorAll('.film-details').length > 1) {
+      document.querySelectorAll('.film-details')[0].remove();
+    }
   }
 
   _handlePopupShow() {
@@ -100,7 +105,7 @@ export default class Movie {
   _closePopup() {
     this._siteBody.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this._onEscKeyDown);
-    remove(this._filmPopupComponent)
+    remove(this._filmPopupComponent);
     this._mode = Mode.DEFAULT;
     this._changeData(
       UserAction.UPDATE_MOVIE,
@@ -286,12 +291,13 @@ export default class Movie {
 
     switch (state) {
       case CommentState.DELETING:
+        const popupScrollPostition = document.querySelector('.film-details').scrollTop;
         this._filmPopupComponent.updateData({
           isDisabled: true,
           isDeleting: true,
           deletingId: commentId,
         });
-        console.log(this._filmPopupComponent);
+        document.querySelector('.film-details').scrollTop = popupScrollPostition;
         break;
       case CommentState.ABORTING:
         this._filmPopupComponent.shake(resetFormState);

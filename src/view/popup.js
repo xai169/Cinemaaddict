@@ -11,14 +11,14 @@ const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
   return `${hasEmoji ? `<img src="./images/emoji/${emojiIcon}.png" width="55" height="55" alt="emoji-${emojiIcon}">` : ``}`;
 }
 
-const createCommentTemplate = (comment) => {
-  const { id, emoji, text, author, date } = comment;
+const createCommentTemplate = (message) => {
+  const { id, emotion, comment, author, date } = message;
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
+    <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
   </span>
   <div>
-    <p class="film-details__comment-text">${text}</p>
+    <p class="film-details__comment-text">${comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${date}</span>
@@ -45,11 +45,11 @@ const createGenreTemplate = (genre) => {
 
 const createGenresTeamplate = (genres) => genres.map((genre) => createGenreTemplate(genre)).join(``);
 
-const createPopupTemplate = (filmCard) => {
+const createPopupTemplate = (filmCard, comments) => {
 
   const changeEmojis = CreateEmojiChanger(filmCard.emojiIcon, filmCard.hasEmoji);
 
-  const renderComments = createCommentsTemplate(filmCard.comments);
+  const renderComments = createCommentsTemplate(comments);
 
   const runTime = getRunTime(filmCard.duration);
 
@@ -165,11 +165,11 @@ const createPopupTemplate = (filmCard) => {
 }
 
 export default class Popup extends SmartView {
-  constructor(filmCard, api) {
+  constructor(filmCard, comments) {
     super();
     this._filmCard = filmCard;
     this._data = this._parseFilmToState(this._filmCard);
-    this._api = api;
+    this._comments = comments;
 
     this._popupCloseClickHandler = this._popupCloseClickHandler.bind(this);
     this._watchListPopupClickHandler = this._watchListPopupClickHandler.bind(this);
@@ -184,7 +184,7 @@ export default class Popup extends SmartView {
   }
 
   getTemplate() {
-    return createPopupTemplate(this._data);
+    return createPopupTemplate(this._data, this._comments);
   }
 
   restoreHandlers() {

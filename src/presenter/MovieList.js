@@ -91,7 +91,13 @@ export default class MovieList {
           .values(this._moviePresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._moviePresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  this._moviePresenter[data.id].init(data);
+                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
 
@@ -99,7 +105,13 @@ export default class MovieList {
           .values(this._topRatedPresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._topRatedPresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  this._topRatedPresenter[data.id].init(data);
+                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
 
@@ -107,7 +119,13 @@ export default class MovieList {
           .values(this._mostCommentedPresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._mostCommentedPresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  his._mostCommentedPresenter[data.id].init(data);
+                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
         break
@@ -158,13 +176,13 @@ export default class MovieList {
   };
 
   _renderTopRatedCard(movieCard) {
-    const topRatedPresenter = new MoviePresenter(this._topRatedList, this._handleViewAction, this._handleModeChange);
+    const topRatedPresenter = new MoviePresenter(this._topRatedList, this._handleViewAction, this._handleModeChange, this._api);
     topRatedPresenter.init(movieCard);
     this._topRatedPresenter[movieCard.id] = topRatedPresenter;
   }
 
   _renderMostCommentedCard(movieCard) {
-    const mostCommentedPresenter = new MoviePresenter(this._mostCommentedList, this._handleViewAction, this._handleModeChange);
+    const mostCommentedPresenter = new MoviePresenter(this._mostCommentedList, this._handleViewAction, this._handleModeChange, this._api);
     mostCommentedPresenter.init(movieCard);
     this._mostCommentedPresenter[movieCard.id] = mostCommentedPresenter;
   }

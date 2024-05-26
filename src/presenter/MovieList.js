@@ -66,7 +66,7 @@ export default class MovieList {
     this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
         console.log(MoviesModel.adaptToServer(update));
@@ -75,10 +75,14 @@ export default class MovieList {
         })
         break
       case UserAction.ADD_MOVIE_COMMENT:
-        this._moviesModel.addMovieComment(updateType, update);
+        this._api.addComment(update, comment).then((response) => {
+          this._moviesModel.addMovieComment(updateType, MoviesModel.adaptToClient(response.movie));
+        })
         break
       case UserAction.DELETE_MOVIE_COMMENT:
-        this._moviesModel.deleteMovieComment(updateType, update);
+        this._api.deleteComment(comment).then(() => {
+          this._moviesModel.deleteMovieComment(updateType, update);
+        })
         break
 
     }
@@ -96,6 +100,9 @@ export default class MovieList {
                   const popupScrollPostition = document.querySelector('.film-details').scrollTop;
                   this._moviePresenter[data.id].init(data);
                   this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
                   document.querySelector('.film-details').scrollTop = popupScrollPostition;
                 })
             }
@@ -109,7 +116,10 @@ export default class MovieList {
                 .then((comments) => {
                   const popupScrollPostition = document.querySelector('.film-details').scrollTop;
                   this._topRatedPresenter[data.id].init(data);
-                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  this._topRatedPresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
                   document.querySelector('.film-details').scrollTop = popupScrollPostition;
                 })
             }
@@ -122,8 +132,11 @@ export default class MovieList {
               this._api.getComments(data)
                 .then((comments) => {
                   const popupScrollPostition = document.querySelector('.film-details').scrollTop;
-                  his._mostCommentedPresenter[data.id].init(data);
-                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  this._mostCommentedPresenter[data.id].init(data);
+                  this._mostCommentedPresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
                   document.querySelector('.film-details').scrollTop = popupScrollPostition;
                 })
             }

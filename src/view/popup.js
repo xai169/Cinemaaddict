@@ -125,7 +125,7 @@ const createPopupTemplate = (filmCard, comments) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${filmCard.comments.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">${renderComments}</ul>
 
@@ -236,11 +236,8 @@ export default class Popup extends SmartView {
         return;
       }
       const newComment = {
-        id: nanoid(),
-        emoji: this._data.emojiIcon,
-        text: this._data.newCommentText,
-        author: 'Obamna',
-        date: dayjs(),
+        emotion: this._data.emojiIcon,
+        comment: this._data.newCommentText,
       }
       this._parseStateToFilm(this._data);
       this._callback.formSubmit(newComment);

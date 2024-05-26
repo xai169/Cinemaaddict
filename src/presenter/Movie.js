@@ -71,9 +71,9 @@ export default class Movie {
     replace(this._filmComponent, oldFilmCard);
 
     // if (this._mode === Mode.EDITING) {
-    //   const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+    //   // const popupScrollPostition = document.querySelector('.film-details').scrollTop;
     //   replace(this._filmPopupComponent, oldFilmPopupCard);
-    //   document.querySelector('.film-details').scrollTop = popupScrollPostition;
+    //   // document.querySelector('.film-details').scrollTop = popupScrollPostition;
     // }
     remove(oldFilmCard);
     remove(oldFilmPopupCard);
@@ -92,6 +92,8 @@ export default class Movie {
     // console.log(comments);
     // this._filmId = film.id;
 
+
+
     this._filmPopupComponent = new PopupView(film, comments);
 
     this._siteBody.classList.add('hide-overflow');
@@ -105,6 +107,9 @@ export default class Movie {
     this._filmPopupComponent.setFormSubmitHandler(this._addComment);
 
     render(this._siteBody, this._filmPopupComponent, RenderPosition.BEFOREEND);
+
+    // this._changeMode();
+    // this._mode = Mode.EDITING;
   }
 
   // _showPopup() {
@@ -147,7 +152,7 @@ export default class Movie {
 
   _closePopup() {
     this._siteBody.classList.remove('hide-overflow');
-    this._filmPopupComponent.reset(this._movieCard);
+    // this._filmPopupComponent.reset(this._movieCard);
     document.removeEventListener('keydown', this._onEscKeyDown);
     remove(this._filmPopupComponent)
     this._mode = Mode.DEFAULT;
@@ -291,6 +296,7 @@ export default class Movie {
             remainingComments
         },
       ),
+      commentId
     );
   }
 
@@ -308,6 +314,7 @@ export default class Movie {
             [...currentComments, newComment]
         },
       ),
+      newComment
     );
   }
 

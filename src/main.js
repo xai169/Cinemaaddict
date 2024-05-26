@@ -8,7 +8,7 @@ import FilterModel from './model/filter.js';
 import { UpdateType } from "./const.js";
 
 
-const AUTHORIZATION = 'Basic sdfjkgdfjkgndfgjdfn';
+const AUTHORIZATION = 'Basic asdfghbhnzxhnlasd324fn';
 const END_POINT = 'https://14.ecmascript.htmlacademy.pro/cinemaddict';
 
 const siteMainElement = document.querySelector('.main');
@@ -22,7 +22,7 @@ const filterModel = new FilterModel();
 const movieListPresenter = new MovieListPresenter(siteMainElement, moviesModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteMainElement, moviesModel, filterModel);
 
-render(filmFooterStatistic, new FilmsCountView(api.getMovies()), RenderPosition.BEFOREEND);
+render(filmFooterStatistic, new FilmsCountView("123", RenderPosition.BEFOREEND));
 
 
 movieListPresenter.init();

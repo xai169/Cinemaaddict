@@ -10,7 +10,7 @@ import LoadingView from "../view/loading.js";
 import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
-import { SortType, UserAction, UpdateType, FilterType } from "../const.js";
+import { SortType, UserAction, UpdateType, FilterType, CommentState } from "../const.js";
 import { filter, userRank } from "../utils/filter.js";
 import MoviesModel from '../model/movies.js';
 
@@ -52,9 +52,6 @@ export default class MovieList {
   }
 
   init() {
-
-    // this._renderMovieList();
-
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
@@ -66,19 +63,31 @@ export default class MovieList {
     this._filterModel.deleteObserver(this._handleModelEvent);
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        console.log(MoviesModel.adaptToServer(update));
         this._api.updateMovie(update).then((response) => {
           this._moviesModel.updateMovie(updateType, response);
         })
         break
       case UserAction.ADD_MOVIE_COMMENT:
-        this._moviesModel.addMovieComment(updateType, update);
+        this._api.addComment(update, comment)
+          .then((response) => {
+            this._moviesModel.addMovieComment(updateType, MoviesModel.adaptToClient(response.movie));
+          })
+          .catch(() => {
+            this._moviePresenter[update.id].setViewState(CommentState.ABORTING);
+          })
         break
       case UserAction.DELETE_MOVIE_COMMENT:
-        this._moviesModel.deleteMovieComment(updateType, update);
+        this._moviePresenter[update.id].setViewState(CommentState.DELETING, comment);
+        this._api.deleteComment(comment)
+          .then(() => {
+            this._moviesModel.deleteMovieComment(updateType, update);
+          })
+          .catch(() => {
+            this._moviePresenter[update.id].setViewState(CommentState.ABORTING);
+          })
         break
 
     }
@@ -91,7 +100,16 @@ export default class MovieList {
           .values(this._moviePresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._moviePresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  this._moviePresenter[data.id].init(data);
+                  this._moviePresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
 
@@ -99,7 +117,16 @@ export default class MovieList {
           .values(this._topRatedPresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._topRatedPresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  this._topRatedPresenter[data.id].init(data);
+                  this._topRatedPresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
 
@@ -107,7 +134,16 @@ export default class MovieList {
           .values(this._mostCommentedPresenter)
           .forEach((presenter) => {
             if (presenter._movieCard.id === data.id) {
-              this._mostCommentedPresenter[data.id].init(data);
+              this._api.getComments(data)
+                .then((comments) => {
+                  const popupScrollPostition = document.querySelector('.film-details').scrollTop;
+                  this._mostCommentedPresenter[data.id].init(data);
+                  this._mostCommentedPresenter[data.id]._renderFilmDetails(data, comments);
+                  if (document.querySelectorAll('.film-details').length > 1) {
+                    document.querySelectorAll('.film-details')[0].remove();
+                  }
+                  document.querySelector('.film-details').scrollTop = popupScrollPostition;
+                })
             }
           });
         break
@@ -152,19 +188,19 @@ export default class MovieList {
   }
 
   _renderMovieCard(movieCard) {
-    const moviePresenter = new MoviePresenter(this._filmContainerComponent, this._handleViewAction, this._handleModeChange);
+    const moviePresenter = new MoviePresenter(this._filmContainerComponent, this._handleViewAction, this._handleModeChange, this._api);
     moviePresenter.init(movieCard);
     this._moviePresenter[movieCard.id] = moviePresenter;
   };
 
   _renderTopRatedCard(movieCard) {
-    const topRatedPresenter = new MoviePresenter(this._topRatedList, this._handleViewAction, this._handleModeChange);
+    const topRatedPresenter = new MoviePresenter(this._topRatedList, this._handleViewAction, this._handleModeChange, this._api);
     topRatedPresenter.init(movieCard);
     this._topRatedPresenter[movieCard.id] = topRatedPresenter;
   }
 
   _renderMostCommentedCard(movieCard) {
-    const mostCommentedPresenter = new MoviePresenter(this._mostCommentedList, this._handleViewAction, this._handleModeChange);
+    const mostCommentedPresenter = new MoviePresenter(this._mostCommentedList, this._handleViewAction, this._handleModeChange, this._api);
     mostCommentedPresenter.init(movieCard);
     this._mostCommentedPresenter[movieCard.id] = mostCommentedPresenter;
   }

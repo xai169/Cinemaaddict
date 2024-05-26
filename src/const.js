@@ -40,3 +40,9 @@ export const GenreType = {
   COMEDY: 'Comedy',
   TV_SERIES: 'TV Series',
 };
+
+export const CommentState = {
+  ADDITING: 'ADDITING',
+  DELETING: 'DELETING',
+  ABORTING: `ABORTING`,
+}

@@ -11,8 +11,15 @@ const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
   return `${hasEmoji ? `<img src="./images/emoji/${emojiIcon}.png" width="55" height="55" alt="emoji-${emojiIcon}">` : ``}`;
 }
 
-const createCommentTemplate = (message) => {
+const createCommentTemplate = (message, isDisabled, isDeleting, deletedCommentId) => {
   const { id, emotion, comment, author, date } = message;
+
+  const Deleting = isDeleting && id === deletedCommentId;
+  const Disabled = isDisabled && id === deletedCommentId;
+  console.log(Deleting);
+  const buttonText = Deleting ? `Deleting...` : `Delete`;
+  const disabled = addDisabledProperty(Disabled);
+
   return `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">
@@ -22,17 +29,17 @@ const createCommentTemplate = (message) => {
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${author}</span>
       <span class="film-details__comment-day">${date}</span>
-      <button class="film-details__comment-delete" data-id="${id}">Delete</button>
+      <button class="film-details__comment-delete ${disabled}" data-id="${id}">${buttonText}</button>
     </p>
   </div>
 </li>`;
 }
 
-const createCommentsTemplate = (comments) => {
+const createCommentsTemplate = (comments, isDisabled, isDeleting, deletedCommentId) => {
   if (comments.length !== 0) {
     const commentsList = comments
       .sort(compareCommentDate)
-      .map((comment) => createCommentTemplate(comment))
+      .map((comment) => createCommentTemplate(comment, isDisabled, isDeleting, deletedCommentId))
       .join(``);
     return `${commentsList}`;
   }
@@ -45,15 +52,22 @@ const createGenreTemplate = (genre) => {
 
 const createGenresTeamplate = (genres) => genres.map((genre) => createGenreTemplate(genre)).join(``);
 
-const createPopupTemplate = (filmCard, comments) => {
+const addDisabledProperty = (isDisabled) => {
+  return isDisabled ? `disabled` : ``;
+};
+
+
+
+const createPopupTemplate = (filmCard, comments, isDisabled, isDeleting, deletedCommentId) => {
 
   const changeEmojis = CreateEmojiChanger(filmCard.emojiIcon, filmCard.hasEmoji);
 
-  const renderComments = createCommentsTemplate(comments);
+  const renderComments = createCommentsTemplate(comments, filmCard.isDisabled, filmCard.isDeleting, filmCard.deletingId);
 
   const runTime = getRunTime(filmCard.duration);
 
   const genres = createGenresTeamplate(filmCard.genre);
+  console.log(filmCard.isDeleting);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -304,6 +318,8 @@ export default class Popup extends SmartView {
         hasEmoji: false,
         emojiIcon: ``,
         newCommentText: ``,
+        isDisabled: false,
+        isDeleting: false,
       },
     );
   }
@@ -323,6 +339,18 @@ export default class Popup extends SmartView {
       data.newCommentText = ``;
     }
 
+    if (!data.isDisabled) {
+      data.isDisabled = false;
+    }
+
+    if (!data.isDeleting) {
+      data.isDeleting = false;
+    }
+
+    if (!data.deletingId) {
+      data.deletingId = ``;
+    }
+
     data.filter = {
       isFavorite: this._data.filter.isFavorite,
       isWatched: this._data.filter.isWatched,
@@ -331,6 +359,9 @@ export default class Popup extends SmartView {
 
     delete data.emojiIcon;
     delete data.hasEmoji;
+    delete data.isDisabled;
+    delete data.deletingId;
+    delete data.isDeleting;
 
     return data;
   }

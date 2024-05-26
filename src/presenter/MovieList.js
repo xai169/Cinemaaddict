@@ -10,7 +10,7 @@ import LoadingView from "../view/loading.js";
 import { compareCommentsNumber, compareFilmRaiting, compareFilmDate } from '../utils/film-cards.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import MoviePresenter from './Movie.js';
-import { SortType, UserAction, UpdateType, FilterType } from "../const.js";
+import { SortType, UserAction, UpdateType, FilterType, CommentState } from "../const.js";
 import { filter, userRank } from "../utils/filter.js";
 import MoviesModel from '../model/movies.js';
 
@@ -52,9 +52,6 @@ export default class MovieList {
   }
 
   init() {
-
-    // this._renderMovieList();
-
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
@@ -69,20 +66,28 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, update, comment) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
-        console.log(MoviesModel.adaptToServer(update));
         this._api.updateMovie(update).then((response) => {
           this._moviesModel.updateMovie(updateType, response);
         })
         break
       case UserAction.ADD_MOVIE_COMMENT:
-        this._api.addComment(update, comment).then((response) => {
-          this._moviesModel.addMovieComment(updateType, MoviesModel.adaptToClient(response.movie));
-        })
+        this._api.addComment(update, comment)
+          .then((response) => {
+            this._moviesModel.addMovieComment(updateType, MoviesModel.adaptToClient(response.movie));
+          })
+          .catch(() => {
+            this._moviePresenter[update.id].setViewState(CommentState.ABORTING);
+          })
         break
       case UserAction.DELETE_MOVIE_COMMENT:
-        this._api.deleteComment(comment).then(() => {
-          this._moviesModel.deleteMovieComment(updateType, update);
-        })
+        this._moviePresenter[update.id].setViewState(CommentState.DELETING, comment);
+        this._api.deleteComment(comment)
+          .then(() => {
+            this._moviesModel.deleteMovieComment(updateType, update);
+          })
+          .catch(() => {
+            this._moviePresenter[update.id].setViewState(CommentState.ABORTING);
+          })
         break
 
     }

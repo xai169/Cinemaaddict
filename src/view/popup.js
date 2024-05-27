@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import dayjsRandom from 'dayjs-random';
 import { nanoid } from 'nanoid';
 import he from 'he';
-import Api from "../api.js";
+import Api from "../api/api.js";
 
 const CreateEmojiChanger = (emojiIcon, hasEmoji) => {
   return `${hasEmoji ? `<img src="./images/emoji/${emojiIcon}.png" width="55" height="55" alt="emoji-${emojiIcon}">` : ``}`;

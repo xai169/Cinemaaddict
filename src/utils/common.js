@@ -23,4 +23,8 @@ const getRandomArrayElement = (elements) => {
   return elements[getRandomInt(0, elements.length - 1)];
 };
 
-export { getRandomInt, getRandom, getRandomArrayElement, checkEsc };
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
+export { getRandomInt, getRandom, getRandomArrayElement, checkEsc, isOnline };

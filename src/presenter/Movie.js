@@ -3,7 +3,9 @@ import PopupView from "../view/popup.js";
 import { checkEsc } from '../utils/common.js';
 import { render, RenderPosition, append, removeChild, replace, remove } from '../utils/render.js';
 import { UserAction, UpdateType, CommentState } from "../const.js";
-import Api from "../api.js";
+import Api from "../api/api.js";
+import { toast } from '../utils/toast.js';
+import { isOnline } from '../utils/common.js';
 
 const Mode = {
   DEFAULT: `default`,
@@ -232,6 +234,11 @@ export default class Movie {
   };
 
   _deleteComment(commentId) {
+
+    if (!isOnline()) {
+      toast(`You can't delete comment offline`);
+    }
+
     const currentComments = this._movieCard.comments.slice();
     const remainingComments = currentComments.filter((comment) => comment.id !== commentId);
 
@@ -252,6 +259,11 @@ export default class Movie {
   }
 
   _addComment(newComment) {
+
+    if (!isOnline()) {
+      toast(`You can't add a new comment offline`);
+    }
+
     const currentComments = this._movieCard.comments.slice();
 
     this._changeData(

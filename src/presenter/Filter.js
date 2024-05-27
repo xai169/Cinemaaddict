@@ -40,24 +40,11 @@ export default class Filter {
     const prevUserRankComponent = this._userRankComponent;
     this._userRankComponent = new UserRankView(this._UserRank);
 
-    // this._prevStatsComponent = this._statsComponent;
-    // this._statsComponent = new StatsView();
-
     if (prevFilterComponent === null && prevUserRankComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
       render(this._siteHeaderElement, this._userRankComponent, RenderPosition.BEFOREEND);
       return;
     }
-
-    // if (this._prevStatsComponent === null) {
-    //   this._filterModel.setFilter(UpdateType.CLEAR, FilterType.STATS);
-    //   render(this._siteMainElement, this._statsComponent, RenderPosition.BEFOREEND);
-    //   return;
-    // }
-
-    // replace(this._statsComponent, prevStatsComponent);
-
-    // remove(prevStatsComponent);
 
     replace(this._filterComponent, prevFilterComponent);
     replace(this._userRankComponent, prevUserRankComponent);
